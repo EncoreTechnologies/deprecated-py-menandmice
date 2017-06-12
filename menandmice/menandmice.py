@@ -1,21 +1,46 @@
 import requests
 import json
-from requests.auth import HTTPBasicAuth
-from .dns import *
-from .users import *
-from .ipam import *
 
-class ObjectAccess(object):
+from menandmice.Base import BaseObject
+
+from menandmice.dns import DNSGenerateDirective
+from menandmice.dns import DNSRecords
+from menandmice.dns import DNSView
+from menandmice.dns import DNSViews
+from menandmice.dns import DNSZone
+from menandmice.dns import DNSZoneOptions
+from menandmice.dns import DNSZones
+
+from menandmice.ipam import AddressBlock
+from menandmice.ipam import ChangeRequest
+from menandmice.ipam import ChangeRequests
+from menandmice.ipam import Device
+from menandmice.ipam import Devices
+from menandmice.ipam import Discovery
+from menandmice.ipam import Folder
+from menandmice.ipam import Folders
+from menandmice.ipam import GetRangeStatisticsResponse
+from menandmice.ipam import Interface
+from menandmice.ipam import Interfaces
+from menandmice.ipam import IPAMRecord
+from menandmice.ipam import IPAMRecords
+from menandmice.ipam import Range
+from menandmice.ipam import Ranges
+
+from menandmice.users import Group
+from menandmice.users import Groups
+from menandmice.users import Role
+from menandmice.users import Roles
+from menandmice.users import User
+from menandmice.users import Users
+
+
+class ObjectAccess(BaseObject):
     def __init__(self, **kwargs):
         self.ref = self.getValue('ref', kwargs)
         self.name = self.getValue('name', kwargs)
-        self.identityAccess = self.buildIdentityAccess(self.getValue('identityAccess', kwargs))
-
-    def getValue(self, key, kwargs):
-        return_val = ""
-        if key in kwargs:
-            return_val = kwargs[key]
-        return return_val
+        self.identityAccess = self.buildIdentityAccess(
+            self.getValue('identityAccess', kwargs))
 
     def buildIdentityAccess(self, identityAccess):
         all_identityAccess = []
@@ -27,21 +52,13 @@ class ObjectAccess(object):
                 all_identityAccess.append(IdentityAccess(**identityAccess))
         return all_identityAccess
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
 
-
-class IdentityAccess(object):
+class IdentityAccess(BaseObject):
     def __init__(self, identityRef="", identityName="", accessEntries="", **kwargs):
         self.identityRef = self.getValue('identityRef', kwargs)
         self.identityName = self.getValue('identityName', kwargs)
-        self.accessEntries = self.buildAccessEntries(self.getValue('accessEntries', kwargs))
-
-    def getValue(self, key, kwargs):
-        return_val = ""
-        if key in kwargs:
-            return_val = kwargs[key]
-        return return_val
+        self.accessEntries = self.buildAccessEntries(
+            self.getValue('accessEntries', kwargs))
 
     def buildAccessEntries(self, accessEntries):
         all_accessEntries = []
@@ -53,27 +70,15 @@ class IdentityAccess(object):
                 all_accessEntries.append(AccessEntry(**accessEntries))
         return all_accessEntries
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
 
-
-class AccessEntry(object):
+class AccessEntry(BaseObject):
     def __init__(self, name="", access="", **kwargs):
         self.name = self.getValue('name', kwargs)
         self.access = self.getValue('access', kwargs)
 
-    def getValue(self, key, kwargs):
-        return_val = ""
-        if key in kwargs:
-            return_val = kwargs[key]
-        return return_val
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
-
-class Event(object):
-    def __init__(self, eventType="", objType="", objRef="", objName="", timestamp="", username="", saveComment="", eventText="", **kwargs):
+class Event(BaseObject):
+    def __init__(self, **kwargs):
         self.eventType = self.getValue('eventType', kwargs)
         self.objType = self.getValue('objType', kwargs)
         self.objRef = self.getValue('objRef', kwargs)
@@ -83,18 +88,9 @@ class Event(object):
         self.saveComment = self.getValue('saveComment', kwargs)
         self.eventText = self.getValue('eventText', kwargs)
 
-    def getValue(self, key, kwargs):
-        return_val = ""
-        if key in kwargs:
-            return_val = kwargs[key]
-        return return_val
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
-
-class PropertyDefinition(object):
-    def __init__(self, name="", type="", system="", mandatory="", readOnly="", multiLine="", defaultValue="", listItems="", parentProperty="", **kwargs):
+class PropertyDefinition(BaseObject):
+    def __init__(self, **kwargs):
         self.name = self.getValue('name', kwargs)
         self.type = self.getValue('type', kwargs)
         self.system = self.getValue('system', kwargs)
@@ -105,17 +101,8 @@ class PropertyDefinition(object):
         self.listItems = self.getValue('listItems', kwargs)
         self.parentProperty = self.getValue('parentProperty', kwargs)
 
-    def getValue(self, key, kwargs):
-        return_val = ""
-        if key in kwargs:
-            return_val = kwargs[key]
-        return return_val
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
-
-class Client(object):
+class Client(BaseObject):
     def __init__(self, server, username, password):
         self.baseurl = "http://{0}/mmws/api/".format(server)
         self.session = requests.Session()
@@ -218,15 +205,16 @@ class Client(object):
         return_val = ""
         print(response.status_code)
         if response.status_code == 200:
-            return_val = response.json();
+            return_val = response.json()
         elif response.status_code == 204:
             return_val = "No data to display"
         else:
-            error_json = response.json();
+            error_json = response.json()
             if error_json:
                 code = error_json['error']['code']
                 message = error_json['error']['message']
-                raise requests.exceptions.HTTPError("{0}: {1}".format(code, message))
+                raise requests.exceptions.HTTPError(
+                    "{0}: {1}".format(code, message))
             else:
                 response.raise_for_status()
         return return_val
@@ -234,16 +222,17 @@ class Client(object):
     def post(self, url, payload):
         sanitized_payload = self.sanitize_json(payload)
         print(sanitized_payload)
-        response = self.session.post(url, json = sanitized_payload)
+        response = self.session.post(url, json=sanitized_payload)
         if response.status_code != 201:
-            error_json = response.json();
+            error_json = response.json()
             if error_json:
                 code = error_json['error']['code']
                 message = error_json['error']['message']
-                raise requests.exceptions.HTTPError("{0}: {1}".format(code, message))
+                raise requests.exceptions.HTTPError(
+                    "{0}: {1}".format(code, message))
             else:
                 response.raise_for_status()
-        return response.json();
+        return response.json()
 
     def delete(self, url):
         response = self.session.delete(url)
@@ -251,11 +240,12 @@ class Client(object):
         if response.status_code == 204:
             return_status = "Successfully removed!"
         else:
-            error_json = response.json();
+            error_json = response.json()
             if error_json:
                 code = error_json['error']['code']
                 message = error_json['error']['message']
-                raise requests.exceptions.HTTPError("{0}: {1}".format(code, message))
+                raise requests.exceptions.HTTPError(
+                    "{0}: {1}".format(code, message))
             else:
                 response.raise_for_status()
         return return_status
@@ -265,15 +255,17 @@ class Client(object):
         if not sanitize_override:
             payload = self.sanitize_json(payload)
         print(payload)
-        response = self.session.put(url, json = payload)
+        response = self.session.put(url, json=payload)
         return_status = ""
         if response.status_code == 204:
             return_status = "Successfully updated!"
         else:
+            error_json = response.json()
             if error_json:
                 code = error_json['error']['code']
                 message = error_json['error']['message']
-                raise requests.exceptions.HTTPError("{0}: {1}".format(code, message))
+                raise requests.exceptions.HTTPError(
+                    "{0}: {1}".format(code, message))
             else:
                 response.raise_for_status()
         return return_status
@@ -292,10 +284,10 @@ class Client(object):
         if not isinstance(properties, list):
             properties = [properties]
         payload = {
-            "ref" : ref,
-            "objType" : objType,
-            "saveComment" : saveComment,
-            "deleteUnspecified" : deleteUnspecified,
+            "ref": ref,
+            "objType": objType,
+            "saveComment": saveComment,
+            "deleteUnspecified": deleteUnspecified,
             "properties": properties
         }
         return self.put("{0}{1}".format(self.baseurl, ref), payload)
@@ -313,8 +305,10 @@ class Client(object):
                     query_string += "?{0}={1}".format(key, value)
                 else:
                     query_string += "&{0}={1}".format(key, value)
-        access_response_json = self.get("{0}{1}/Access{2}".format(self.baseurl, ref, query_string))
-        access_object = self.buildAccess(access_response_json['result']['objectAccess'])
+        access_response_json = self.get(
+            "{0}{1}/Access{2}".format(self.baseurl, ref, query_string))
+        access_object = self.buildAccess(
+            access_response_json['result']['objectAccess'])
         return access_object
 
     def setItemAccess(self, ref, identity_access, object_type, saveComment):
@@ -323,9 +317,9 @@ class Client(object):
         if not isinstance(identity_access, list):
             identity_access = [identity_access]
         payload = {
-            "objType" : object_type,
-            "saveComment" : saveComment,
-            "identityAccess" : identity_access
+            "objType": object_type,
+            "saveComment": saveComment,
+            "identityAccess": identity_access
         }
         print(payload)
         return self.put("{0}{1}/Access".format(self.baseurl, ref), payload)
@@ -343,7 +337,8 @@ class Client(object):
                     query_string += "?{0}={1}".format(key, value)
                 else:
                     query_string += "&{0}={1}".format(key, value)
-        history_response_json = self.get("{0}{1}/History{2}".format(self.baseurl, ref, query_string))
+        history_response_json = self.get(
+            "{0}{1}/History{2}".format(self.baseurl, ref, query_string))
         all_events = []
         for event in history_response_json['result']['events']:
             all_events.append(self.buildEvent(event))
@@ -357,7 +352,8 @@ class Client(object):
     def getPropertyDefinitions(self, ref, property_name):
         url = ""
         if property_name:
-            url = "{0}{1}/PropertyDefinitions/{2}".format(self.baseurl, ref, property_name)
+            url = "{0}{1}/PropertyDefinitions/{2}".format(
+                self.baseurl, ref, property_name)
         else:
             url = "{0}{1}/PropertyDefinitions".format(self.baseurl, ref)
         property_definitions_json = self.get(url)
@@ -371,23 +367,33 @@ class Client(object):
             property_definition = json.loads(property_definition.to_json())
         url = "{0}{1}/PropertyDefinitions".format(self.baseurl, ref)
         payload = {
-            'saveComment' : saveComment,
-            'propertyDefinition' : property_definition
+            'saveComment': saveComment,
+            'propertyDefinition': property_definition
         }
         return self.post(url, payload)
 
-    def updatePropertyDefinitions(self, ref, property_name, property_definition, updateExisting, saveComment):
+    def updatePropertyDefinitions(self, ref,
+                                  property_name,
+                                  property_definition,
+                                  updateExisting,
+                                  saveComment):
         if isinstance(property_definition, PropertyDefinition):
             property_definition = json.loads(property_definition.to_json())
         payload = {
-            'updateExisting' : updateExisting,
-            'saveComment' : saveComment,
-            'propertyDefinition' : property_definition
+            'updateExisting': updateExisting,
+            'saveComment': saveComment,
+            'propertyDefinition': property_definition
         }
-        return self.put("{0}{1}/PropertyDefinitions/{2}".format(self.baseurl, ref, property_name), payload)
+        return self.put("{0}{1}/PropertyDefinitions/{2}".format(self.baseurl,
+                                                                ref,
+                                                                property_name),
+                        payload)
 
     def deletePropertyDefinition(self, ref, property_name, saveComment):
         query_string = ""
         if saveComment:
             query_string = "?{0}".format(saveComment)
-        return self.delete("{0}{1}/PropertyDefinitions/{2}{3}".format(self.baseurl, ref, property_name, query_string))
+        return self.delete("{0}{1}/PropertyDefinitions/{2}{3}".format(self.baseurl,
+                                                                      ref,
+                                                                      property_name,
+                                                                      query_string))

@@ -1,6 +1,10 @@
 import json
 
-class IPAMRecord(object):
+from menandmice.base import BaseObject
+from menandmice.base import BaseService
+
+
+class IPAMRecord(BaseObject):
     def __init__(self, **kwargs):
         self.addrRef = self.getValue('addrRef', kwargs)
         self.address = self.getValue('address', kwargs)
@@ -20,17 +24,8 @@ class IPAMRecord(object):
         self.state = self.getValue('state', kwargs)
         self.usage = self.getValue('usage', kwargs)
 
-    def getValue(self, key, kwargs):
-        return_val = ""
-        if key in kwargs:
-            return_val = kwargs[key]
-        return return_val
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
-
-class Range(object):
+class Range(BaseObject):
     def __init__(self, **kwargs):
         self.ref = self.getValue('ref', kwargs)
         self.name = self.getValue('name', kwargs)
@@ -55,66 +50,30 @@ class Range(object):
         self.discoveredProperties = self.getValue('discoveredProperties', kwargs)
         self.creationTime = self.getValue('creationTime', kwargs)
 
-    def getValue(self, key, kwargs):
-        return_val = ""
-        if key in kwargs:
-            return_val = kwargs[key]
-        return return_val
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
-
-class Discovery(object):
+class Discovery(BaseObject):
     def __init__(self, **kwargs):
         self.interval = self.getValue('interval', kwargs)
         self.unit = self.getValue('unit', kwargs)
         self.enabled = self.getValue('enabled', kwargs)
         self.startTime = self.getValue('startTime', kwargs)
 
-    def getValue(self, key, kwargs):
-        return_val = ""
-        if key in kwargs:
-            return_val = kwargs[key]
-        return return_val
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
-
-class AddressBlock(object):
+class AddressBlock(BaseObject):
     def __init__(self, **kwargs):
         self.from_ = self.getValue('from', kwargs)
         self.to = self.getValue('to', kwargs)
 
-    def getValue(self, key, kwargs):
-        return_val = ""
-        if key in kwargs:
-            return_val = kwargs[key]
-        return return_val
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
-
-class GetRangeStatisticsResponse(object):
+class GetRangeStatisticsResponse(BaseObject):
     def __init__(self, **kwargs):
         self.used = self.getValue('used', kwargs)
         self.free = self.getValue('free', kwargs)
         self.numInSubranges = self.getValue('numInSubranges', kwargs)
         self.percentInSubranges = self.getValue('percentInSubranges', kwargs)
 
-    def getValue(self, key, kwargs):
-        return_val = ""
-        if key in kwargs:
-            return_val = kwargs[key]
-        return return_val
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
-
-class Interface(object):
+class Interface(BaseObject):
     def __init__(self, **kwargs):
         self.ref = self.getValue('ref', kwargs)
         self.name = self.getValue('name', kwargs)
@@ -123,34 +82,16 @@ class Interface(object):
         self.customProperties = self.getValue('customProperties', kwargs)
         self.deviceRef = self.getValue('deviceRef', kwargs)
 
-    def getValue(self, key, kwargs):
-        return_val = ""
-        if key in kwargs:
-            return_val = kwargs[key]
-        return return_val
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
-
-class Device(object):
+class Device(BaseObject):
     def __init__(self, **kwargs):
         self.ref = self.getValue('ref', kwargs)
         self.name = self.getValue('name', kwargs)
         self.customProperties = self.getValue('customProperties', kwargs)
         self.interfaces = self.getValue('interfaces', kwargs)
 
-    def getValue(self, key, kwargs):
-        return_val = ""
-        if key in kwargs:
-            return_val = kwargs[key]
-        return return_val
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
-
-class ChangeRequest(object):
+class ChangeRequest(BaseObject):
     def __init__(self, **kwargs):
         self.ref = self.getValue('ref', kwargs)
         self.requester = self.getValue('requester', kwargs)
@@ -170,37 +111,18 @@ class ChangeRequest(object):
         self.dhcpOptionChanges = self.getValue('dhcpOptionChanges', kwargs)
         self.customPropertyChanges = self.getValue('customPropertyChanges', kwargs)
 
-    def getValue(self, key, kwargs):
-        return_val = ""
-        if key in kwargs:
-            return_val = kwargs[key]
-        return return_val
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
-
-class Folder(object):
+class Folder(BaseObject):
     def __init__(self, **kwargs):
         self.ref = self.getValue('ref', kwargs)
         self.name = self.getValue('name', kwargs)
         self.contentType = self.getValue('contentType', kwargs)
         self.parentRef = self.getValue('parentRef', kwargs)
 
-    def getValue(self, key, kwargs):
-        return_val = ""
-        if key in kwargs:
-            return_val = kwargs[key]
-        return return_val
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
-
-class IPAMRecords(object):
+class IPAMRecords(BaseObject):
     def __init__(self, client):
-        self.client = client
-        self.url_base = "IPAMRecords"
+        super(IPAMRecords, self).__init__(client, "IPAMRecords")
 
     def build(self, json_input):
         if isinstance(json_input, basestring):
@@ -215,35 +137,10 @@ class IPAMRecords(object):
                     query_string += "?{0}={1}".format(key, value)
                 else:
                     query_string += "&{0}={1}".format(key, value)
-        ipam_record_response = self.client.get("{0}{1}{2}".format(self.client.baseurl, address_ref, query_string))
+        ipam_record_response = self.client.get("{0}{1}{2}".format(self.client.baseurl,
+                                                                  address_ref,
+                                                                  query_string))
         return self.build(ipam_record_response['result']['ipamRecord'])
-
-    def update(self, address_ref, properties, objType="", saveComment="", deleteUnspecified=False):
-        return self.client.updateItem(address_ref, properties, objType, saveComment, deleteUnspecified)
-
-    def delete(self, address_ref, **kwargs):
-        return self.client.deleteItem(address_ref, kwargs)
-
-    def getAccess(self, address_ref, **kwargs):
-        return self.client.getItemAccess(address_ref, kwargs)
-
-    def setAccess(self, address_ref, identity_access, object_type="", saveComment=""):
-        return self.client.setItemAccess(address_ref, identity_access, object_type, saveComment)
-
-    def getHistory(self, address_ref, **kwargs):
-        return self.client.getItemHistory(address_ref, kwargs)
-
-    def getPropertyDefinition(self, address_ref, property_name=""):
-        return self.client.getPropertyDefinitions(address_ref, property_name)
-
-    def addNewPropertyDefinition(self, address_ref, property_definition, saveComment=""):
-        return self.client.newCustomProperty(address_ref, property_definition, saveComment)
-
-    def updatePropertyDefinition(self, address_ref, property_name, property_definition, updateExisting="", saveComment=""):
-        return self.client.updatePropertyDefinitions(address_ref, property_name, property_definition, updateExisting, saveComment)
-
-    def deletePropertyDefinition(self, address_ref, property_name, saveComment=""):
-        return self.client.deletePropertyDefinition(address_ref, property_name, saveComment)
 
     def pingRecord(self, address_ref):
         return self.client.post("{0}{1}/Ping".format(self.client.baseurl, address_ref), "")
@@ -253,10 +150,9 @@ class IPAMRecords(object):
         return Ranges(self.client).build(range_response['result']['range'])
 
 
-class Ranges(object):
+class Ranges(BaseService):
     def __init__(self, client):
-        self.client = client
-        self.url_base = "Ranges"
+        super(Ranges, self).__init__(client, "Ranges")
 
     def build(self, json_input):
         if isinstance(json_input, basestring):
@@ -283,7 +179,9 @@ class Ranges(object):
                         query_string += "?{0}={1}".format(key, value)
                     else:
                         query_string += "&{0}={1}".format(key, value)
-            range_response = self.client.get("{0}{1}{2}".format(self.client.baseurl, self.url_base, query_string))
+            range_response = self.client.get("{0}{1}{2}".format(self.client.baseurl,
+                                                                self.url_base,
+                                                                query_string))
             for range_output in range_response['result']['ranges']:
                 all_ranges.append(self.build(range_output))
         else:
@@ -298,40 +196,15 @@ class Ranges(object):
             if isinstance(discovery, Discovery):
                 discovery = json.loads(discovery.to_json())
         payload = {
-            "discovery" : discovery,
-            "saveComment" : saveComment,
-            "range" : range_input
+            "discovery": discovery,
+            "saveComment": saveComment,
+            "range": range_input
         }
-        range_json = self.client.post("{0}{1}".format(self.client.baseurl, self.url_base), payload)
-        range_return = self.get(zone_json['result']['ref'])
+        range_json = self.client.post("{0}{1}".format(self.client.baseurl,
+                                                      self.url_base),
+                                      payload)
+        range_return = self.get(range_json['result']['ref'])
         return range_return[0]
-
-    def delete(self, range_ref, **kwargs):
-        return self.client.deleteItem(range_ref, kwargs)
-
-    def update(self, range_ref, properties, objType="", saveComment="", deleteUnspecified=False):
-        return self.client.updateItem(range_ref, properties, objType, saveComment, deleteUnspecified)
-
-    def getAccess(self, range_ref, **kwargs):
-        return self.client.getItemAccess(range_ref, kwargs)
-
-    def setAccess(self, range_ref, identity_access, object_type="", saveComment=""):
-        return self.client.setItemAccess(range_ref, identity_access, object_type, saveComment)
-
-    def getHistory(self, range_ref, **kwargs):
-        return self.client.getItemHistory(range_ref, kwargs)
-
-    def getPropertyDefinition(self, range_ref, property_name=""):
-        return self.client.getPropertyDefinitions(range_ref, property_name)
-
-    def addNewPropertyDefinition(self, range_ref, property_definition, saveComment=""):
-        return self.client.newCustomProperty(range_ref, property_definition, saveComment)
-
-    def updatePropertyDefinition(self, range_ref, property_name, property_definition, updateExisting="", saveComment=""):
-        return self.client.updatePropertyDefinitions(range_ref, property_name, property_definition, updateExisting, saveComment)
-
-    def deletePropertyDefinition(self, range_ref, property_name, saveComment=""):
-        return self.client.deletePropertyDefinition(range_ref, property_name, saveComment)
 
     def getZoneFolder(self, range_ref, **kwargs):
         query_string = ""
@@ -341,7 +214,9 @@ class Ranges(object):
                     query_string += "?{0}={1}".format(key, value)
                 else:
                     query_string += "&{0}={1}".format(key, value)
-        folder_response = self.client.get("{0}{1}/Folders{2}".format(self.client.baseurl, range_ref, query_string))
+        folder_response = self.client.get("{0}{1}/Folders{2}".format(self.client.baseurl,
+                                                                     range_ref,
+                                                                     query_string))
         return Folders(self.client).get(folder_response['result']['folder'])
 
     def deleteZoneFromFolder(self, range_ref, folder_ref="", **kwargs):
@@ -363,7 +238,8 @@ class Ranges(object):
 
     def getAddressBlocks(self, range_ref):
         all_blocks = []
-        range_response = self.client.get("{0}{1}/AddressBlocks".format(self.client.baseurl, range_ref))
+        range_response = self.client.get("{0}{1}/AddressBlocks".format(self.client.baseurl,
+                                                                       range_ref))
         for block in range_response['result']['addressBlocks']:
             all_blocks.append(self.buildAddressBlocks(block))
         return all_blocks
@@ -377,13 +253,18 @@ class Ranges(object):
                     query_string += "?{0}={1}".format(key, value)
                 else:
                     query_string += "&{0}={1}".format(key, value)
-        range_response = self.client.get("{0}{1}/AvailableAddressBlocks{2}".format(self.client.baseurl, range_ref, query))
+        range_response = self.client.get(
+            "{0}{1}/AvailableAddressBlocks{2}".format(self.client.baseurl,
+                                                      range_ref,
+                                                      query_string))
         for block in range_response['result']['addressBlocks']:
             all_blocks.append(self.buildAddressBlocks(block))
         return all_blocks
 
     def getInheritAccess(self, range_ref):
-        inherit_access_response = self.client.get("{0}{1}/InheritAccess".format(self.client.baseurl, range_ref))
+        inherit_access_response = self.client.get(
+            "{0}{1}/InheritAccess".format(self.client.baseurl,
+                                          range_ref))
         return inherit_access_response['result']['inheritAccess']
 
     def getIpamRecords(self, range_ref, **kwargs):
@@ -395,7 +276,9 @@ class Ranges(object):
                     query_string += "?{0}={1}".format(key, value)
                 else:
                     query_string += "&{0}={1}".format(key, value)
-        record_response = self.client.get("{0}{1}/IPAMRecords{2}".format(self.client.baseurl, range_ref, query))
+        record_response = self.client.get("{0}{1}/IPAMRecords{2}".format(self.client.baseurl,
+                                                                         range_ref,
+                                                                         query_string))
         for record in record_response['result']['ipamRecords']:
             all_records.append(IPAMRecords(self.client).build(record))
         return all_records
@@ -408,11 +291,15 @@ class Ranges(object):
                     query_string += "?{0}={1}".format(key, value)
                 else:
                     query_string += "&{0}={1}".format(key, value)
-        address_response = self.client.get("{0}{1}/NextFreeAddress{2}".format(self.client.baseurl, range_ref, query))
+        address_response = self.client.get(
+            "{0}{1}/NextFreeAddress{2}".format(self.client.baseurl,
+                                               range_ref,
+                                               query_string))
         return address_response['result']['address']
 
     def getStatistics(self, range_ref):
-        statistics_response = self.client.get("{0}{1}/Statistics".format(self.client.baseurl, range_ref))
+        statistics_response = self.client.get(
+            "{0}{1}/Statistics".format(self.client.baseurl, range_ref))
         return self.buildStatistics(statistics_response['result'])
 
     def getSubranges(self, range_ref, **kwargs):
@@ -424,16 +311,18 @@ class Ranges(object):
                     query_string += "?{0}={1}".format(key, value)
                 else:
                     query_string += "&{0}={1}".format(key, value)
-        rnage_response = self.client.get("{0}{1}/Subranges{2}".format(self.client.baseurl, range_ref, query))
+        range_response = self.client.get(
+            "{0}{1}/Subranges{2}".format(self.client.baseurl,
+                                         range_ref,
+                                         query_string))
         for range in range_response['result']['ranges']:
             all_ranges.append(self.build(range))
         return all_ranges
 
 
-class Interfaces(object):
+class Interfaces(BaseService):
     def __init__(self, client):
-        self.client = client
-        self.url_base = "Interfaces"
+        super(Interfaces, self).__init__(client, "Interfaces")
 
     def build(self, json_input):
         if isinstance(json_input, basestring):
@@ -450,11 +339,15 @@ class Interfaces(object):
                         query_string += "?{0}={1}".format(key, value)
                     else:
                         query_string += "&{0}={1}".format(key, value)
-            interface_response = self.client.get("{0}{1}{2}".format(self.client.baseurl, self.url_base, query_string))
+            interface_response = self.client.get(
+                "{0}{1}{2}".format(self.client.baseurl,
+                                   self.url_base,
+                                   query_string))
             for interface in interface_response['result']['interfaces']:
                 all_interfaces.append(self.build(interface))
         else:
-            interface_response = self.client.get("{0}{1}".format(self.client.baseurl, interface_ref))
+            interface_response = self.client.get("{0}{1}".format(self.client.baseurl,
+                                                                 interface_ref))
             all_interfaces.append(self.build(interface_response['result']['interface']))
         return all_interfaces
 
@@ -462,47 +355,21 @@ class Interfaces(object):
         if isinstance(interface_input, Interface):
             interface_input = json.loads(interface_input.to_json())
         payload = {
-            "saveComment" : saveComment,
-            "interface" : interface_input
+            "saveComment": saveComment,
+            "interface": interface_input
         }
-        interface_json = self.client.post("{0}{1}".format(self.client.baseurl, self.url_base), payload)
+        interface_json = self.client.post("{0}{1}".format(self.client.baseurl,
+                                                          self.url_base),
+                                          payload)
         interface_return = []
         for ref in interface_json['result']['objRefs']:
             interface_return.append(self.get(ref)[0])
         return interface_return
 
-    def delete(self, interface_ref, **kwargs):
-        return self.client.deleteItem(interface_ref, kwargs)
 
-    def update(self, interface_ref, properties, objType="", saveComment="", deleteUnspecified=False):
-        return self.client.updateItem(interface_ref, properties, objType, saveComment, deleteUnspecified)
-
-    def getAccess(self, interface_ref, **kwargs):
-        return self.client.getItemAccess(interface_ref, kwargs)
-
-    def setAccess(self, interface_ref, identity_access, object_type="", saveComment=""):
-        return self.client.setItemAccess(interface_ref, identity_access, object_type, saveComment)
-
-    def getHistory(self, interface_ref, **kwargs):
-        return self.client.getItemHistory(interface_ref, kwargs)
-
-    def getPropertyDefinition(self, interface_ref, property_name=""):
-        return self.client.getPropertyDefinitions(interface_ref, property_name)
-
-    def addNewPropertyDefinition(self, interface_ref, property_definition, saveComment=""):
-        return self.client.newCustomProperty(interface_ref, property_definition, saveComment)
-
-    def updatePropertyDefinition(self, interface_ref, property_name, property_definition, updateExisting="", saveComment=""):
-        return self.client.updatePropertyDefinitions(interface_ref, property_name, property_definition, updateExisting, saveComment)
-
-    def deletePropertyDefinition(self, interface_ref, property_name, saveComment=""):
-        return self.client.deletePropertyDefinition(interface_ref, property_name, saveComment)
-
-
-class Devices(object):
+class Devices(BaseService):
     def __init__(self, client):
-        self.client = client
-        self.url_base = "Devices"
+        super(Devices, self).__init__(client, "Devices")
 
     def build(self, json_input):
         if isinstance(json_input, basestring):
@@ -519,11 +386,16 @@ class Devices(object):
                         query_string += "?{0}={1}".format(key, value)
                     else:
                         query_string += "&{0}={1}".format(key, value)
-            device_response = self.client.get("{0}{1}{2}".format(self.client.baseurl, self.url_base, query_string))
+            device_response = self.client.get(
+                "{0}{1}{2}".format(self.client.baseurl,
+                                   self.url_base,
+                                   query_string))
             for device in device_response['result']['devices']:
                 all_devices.append(self.build(device))
         else:
-            device_response = self.client.get("{0}{1}".format(self.client.baseurl, device_ref))
+            device_response = self.client.get(
+                "{0}{1}".format(self.client.baseurl,
+                                device_ref))
             all_devices.append(self.build(device_response['result']['device']))
         return all_devices
 
@@ -531,47 +403,21 @@ class Devices(object):
         if isinstance(device_input, Device):
             device_input = json.loads(device_input.to_json())
         payload = {
-            "saveComment" : saveComment,
-            "device" : device_input
+            "saveComment": saveComment,
+            "device": device_input
         }
-        device_json = self.client.post("{0}{1}".format(self.client.baseurl, self.url_base), payload)
+        device_json = self.client.post("{0}{1}".format(self.client.baseurl,
+                                                       self.url_base),
+                                       payload)
         device_return = []
         for ref in device_json['result']['objRefs']:
             device_return.append(self.get(ref)[0])
         return device_return
 
-    def delete(self, device_ref, **kwargs):
-        return self.client.deleteItem(device_ref, kwargs)
 
-    def update(self, device_ref, properties, objType="", saveComment="", deleteUnspecified=False):
-        return self.client.updateItem(device_ref, properties, objType, saveComment, deleteUnspecified)
-
-    def getAccess(self, device_ref, **kwargs):
-        return self.client.getItemAccess(device_ref, kwargs)
-
-    def setAccess(self, device_ref, identity_access, object_type="", saveComment=""):
-        return self.client.setItemAccess(device_ref, identity_access, object_type, saveComment)
-
-    def getHistory(self, device_ref, **kwargs):
-        return self.client.getItemHistory(device_ref, kwargs)
-
-    def getPropertyDefinition(self, device_ref, property_name=""):
-        return self.client.getPropertyDefinitions(device_ref, property_name)
-
-    def addNewPropertyDefinition(self, device_ref, property_definition, saveComment=""):
-        return self.client.newCustomProperty(device_ref, property_definition, saveComment)
-
-    def updatePropertyDefinition(self, device_ref, property_name, property_definition, updateExisting="", saveComment=""):
-        return self.client.updatePropertyDefinitions(device_ref, property_name, property_definition, updateExisting, saveComment)
-
-    def deletePropertyDefinition(self, device_ref, property_name, saveComment=""):
-        return self.client.deletePropertyDefinition(device_ref, property_name, saveComment)
-
-
-class ChangeRequests(object):
+class ChangeRequests(BaseService):
     def __init__(self, client):
-        self.client = client
-        self.url_base = "ChangeRequests"
+        super(ChangeRequests, self).__init__(client, "ChangeRequests")
 
     def build(self, json_input):
         if isinstance(json_input, basestring):
@@ -588,7 +434,10 @@ class ChangeRequests(object):
                         query_string += "?{0}={1}".format(key, value)
                     else:
                         query_string += "&{0}={1}".format(key, value)
-            change_response = self.client.get("{0}{1}{2}".format(self.client.baseurl, self.url_base, query_string))
+            change_response = self.client.get(
+                "{0}{1}{2}".format(self.client.baseurl,
+                                   self.url_base,
+                                   query_string))
             for change in change_response['result']['changeRequests']:
                 all_changes.append(self.build(change))
         else:
@@ -596,9 +445,17 @@ class ChangeRequests(object):
             all_changes.append(self.build(change_response['result']['changeRequest']))
         return all_changes
 
-    def add(self, dnsZoneChanges="", dnsRecordChanges="", dhcpScopeChanges="", dhcpReservationChanges="", dhcpExclusionChanges="", dhcpAddressPoolChanges="", dhcpOptionChanges="", customPropertyChanges="", requestDate="", customProperties="", saveComment=""):
-        if isinstance(change_input, ChangeRequest):
-            change_input = json.loads(change_input.to_json())
+    def add(self, dnsZoneChanges="",
+            dnsRecordChanges="",
+            dhcpScopeChanges="",
+            dhcpReservationChanges="",
+            dhcpExclusionChanges="",
+            dhcpAddressPoolChanges="",
+            dhcpOptionChanges="",
+            customPropertyChanges="",
+            requestDate="",
+            customProperties="",
+            saveComment=""):
         if not isinstance(dnsZoneChanges, list):
             dnsZoneChanges = [dnsZoneChanges]
         if not isinstance(dnsRecordChanges, list):
@@ -618,56 +475,30 @@ class ChangeRequests(object):
         if not isinstance(customProperties, list):
             customProperties = [customProperties]
         payload = {
-            "dnsZoneChanges" : dnsZoneChanges,
-            "dnsRecordChanges" : dnsRecordChanges,
-            "dhcpScopeChanges" : dhcpScopeChanges,
-            "dhcpReservationChanges" : dhcpReservationChanges,
-            "dhcpExclusionChanges" : dhcpExclusionChanges,
-            "dhcpAddressPoolChanges" : dhcpAddressPoolChanges,
-            "dhcpOptionChanges" : dhcpOptionChanges,
-            "customPropertyChanges" : customPropertyChanges,
-            "requestDate" : requestDate,
-            "customProperties" : customProperties,
-            "saveComment" : saveComment,
+            "dnsZoneChanges": dnsZoneChanges,
+            "dnsRecordChanges": dnsRecordChanges,
+            "dhcpScopeChanges": dhcpScopeChanges,
+            "dhcpReservationChanges": dhcpReservationChanges,
+            "dhcpExclusionChanges": dhcpExclusionChanges,
+            "dhcpAddressPoolChanges": dhcpAddressPoolChanges,
+            "dhcpOptionChanges": dhcpOptionChanges,
+            "customPropertyChanges": customPropertyChanges,
+            "requestDate": requestDate,
+            "customProperties": customProperties,
+            "saveComment": saveComment,
         }
-        change_json = self.client.post("{0}{1}".format(self.client.baseurl, self.url_base), payload)
+        change_json = self.client.post("{0}{1}".format(self.client.baseurl,
+                                                       self.url_base),
+                                       payload)
         change_return = []
         for ref in change_json['result']['objRefs']:
             change_return.append(self.get(ref)[0])
         return change_return
 
-    def delete(self, change_ref, **kwargs):
-        return self.client.deleteItem(change_ref, kwargs)
 
-    def update(self, change_ref, properties, objType="", saveComment="", deleteUnspecified=False):
-        return self.client.updateItem(change_ref, properties, objType, saveComment, deleteUnspecified)
-
-    def getAccess(self, change_ref, **kwargs):
-        return self.client.getItemAccess(change_ref, kwargs)
-
-    def setAccess(self, change_ref, identity_access, object_type="", saveComment=""):
-        return self.client.setItemAccess(change_ref, identity_access, object_type, saveComment)
-
-    def getHistory(self, change_ref, **kwargs):
-        return self.client.getItemHistory(change_ref, kwargs)
-
-    def getPropertyDefinition(self, change_ref, property_name=""):
-        return self.client.getPropertyDefinitions(change_ref, property_name)
-
-    def addNewPropertyDefinition(self, change_ref, property_definition, saveComment=""):
-        return self.client.newCustomProperty(change_ref, property_definition, saveComment)
-
-    def updatePropertyDefinition(self, change_ref, property_name, property_definition, updateExisting="", saveComment=""):
-        return self.client.updatePropertyDefinitions(change_ref, property_name, property_definition, updateExisting, saveComment)
-
-    def deletePropertyDefinition(self, change_ref, property_name, saveComment=""):
-        return self.client.deletePropertyDefinition(change_ref, property_name, saveComment)
-
-
-class Folders(object):
+class Folders(BaseService):
     def __init__(self, client):
-        self.client = client
-        self.url_base = "Folders"
+        super(Folders, self).__init__(client, "Folders")
 
     def build(self, json_input):
         if isinstance(json_input, basestring):
@@ -684,7 +515,10 @@ class Folders(object):
                         query_string += "?{0}={1}".format(key, value)
                     else:
                         query_string += "&{0}={1}".format(key, value)
-            folder_response = self.client.get("{0}{1}{2}".format(self.client.baseurl, self.url_base, query_string))
+            folder_response = self.client.get(
+                "{0}{1}{2}".format(self.client.baseurl,
+                                   self.url_base,
+                                   query_string))
             for folder in folder_response['result']['folders']:
                 all_folders.append(self.build(folder))
         else:
@@ -698,28 +532,15 @@ class Folders(object):
         if isinstance(folder_input, Folder):
             folder_input = json.loads(folder_input.to_json())
         payload = {
-            "saveComment" : saveComment,
-            "folder" : folder_input
+            "saveComment": saveComment,
+            "folder": folder_input
         }
-        folder_json = self.client.post("{0}{1}".format(self.client.baseurl, self.url_base), payload)
+        folder_json = self.client.post("{0}{1}".format(self.client.baseurl,
+                                                       self.url_base),
+                                       payload)
         print(folder_json)
         folder_return = self.get(folder_json['result']['ref'])
         return folder_return[0]
-
-    def delete(self, folder_ref, **kwargs):
-        return self.client.deleteItem(folder_ref, kwargs)
-
-    def update(self, folder_ref, properties, objType="Folder", saveComment="", deleteUnspecified=False):
-        return self.client.updateItem(folder_ref, properties, objType, saveComment, deleteUnspecified)
-
-    def getAccess(self, folder_ref, **kwargs):
-        return self.client.getItemAccess(folder_ref, kwargs)
-
-    def setAccess(self, folder_ref, identity_access, object_type="", saveComment=""):
-        return self.client.setItemAccess("{0}/{1}".format(self.url_base, folder_ref), identity_access, object_type, saveComment)
-
-    def getHistory(self, folder_ref, **kwargs):
-        return self.client.getItemHistory(folder_ref, kwargs)
 
     def getObjectFolder(self, ref, **kwargs):
         query_string = ""
@@ -729,7 +550,11 @@ class Folders(object):
                     query_string += "?{0}={1}".format(key, value)
                 else:
                     query_string += "&{0}={1}".format(key, value)
-        url = "{0}{1}/{2}/{3}{4}".format(self.client.baseurl, self.url_base, ref, self.url_base, query_string)
+        url = "{0}{1}/{2}/{3}{4}".format(self.client.baseurl,
+                                         self.url_base,
+                                         ref,
+                                         self.url_base,
+                                         query_string)
         folder_response = self.client.get(url)
         return_val = ""
         if isinstance(folder_response, basestring):
@@ -748,9 +573,13 @@ class Folders(object):
 
     def addToFolder(self, ref, folder_ref, saveComment=""):
         payload = {
-            "saveComment" : saveComment
+            "saveComment": saveComment
         }
-        return self.client.put("{0}{1}/{2}".format(self.client.baseurl, ref, folder_ref), payload, True)
+        return self.client.put("{0}{1}/{2}".format(self.client.baseurl,
+                                                   ref,
+                                                   folder_ref),
+                               payload,
+                               True)
 
     def getAllObjects(self, folder_ref):
         object_json = self.client.get("{0}{1}/Objects".format(self.client.baseurl, folder_ref))
@@ -758,15 +587,3 @@ class Folders(object):
         for o in object_json['result']['objects']:
             all_objects.append(getattr(self.client, o['objType']).get(o['ref'])[0])
         return all_objects
-
-    def getPropertyDefinition(self, folder_ref, property_name=""):
-        return self.client.getPropertyDefinitions(folder_ref, property_name)
-
-    def addNewPropertyDefinition(self, folder_ref, property_definition, saveComment=""):
-        return self.client.newCustomProperty(folder_ref, property_definition, saveComment)
-
-    def updatePropertyDefinition(self, folder_ref, property_name, property_definition, updateExisting="", saveComment=""):
-        return self.client.updatePropertyDefinitions(folder_ref, property_name, property_definition, updateExisting, saveComment)
-
-    def deletePropertyDefinition(self, folder_ref, property_name, saveComment=""):
-        return self.client.deletePropertyDefinition(folder_ref, property_name, saveComment)

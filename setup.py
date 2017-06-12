@@ -3,7 +3,6 @@ import os.path
 from setuptools import setup, find_packages
 
 from dist_utils import fetch_requirements
-from dist_utils import apply_vagrant_workaround
 
 from menandmice import __version__
 
@@ -26,7 +25,7 @@ setup(
     long_description=readme,
     author='Encore Technologies',
     author_email='code@encore.tech',
-    url='https://github.com/EncoreTechnologies/py-menandmice'
+    url='https://github.com/EncoreTechnologies/py-menandmice',
     license=license,
     install_requires=install_reqs,
     dependency_links=dep_links,
