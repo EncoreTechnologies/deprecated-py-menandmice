@@ -46,7 +46,7 @@ class Groups(BaseService):
 
     def add(self, group_input, saveComment=""):
         if isinstance(group_input, Group):
-            group_input = json.loads(group_input.to_json())
+            group_input = json.loads(group_input.to_dict())
         payload = {
             "saveComment": saveComment,
             "group": group_input
@@ -124,7 +124,7 @@ class Roles(BaseService):
 
     def add(self, role_input, saveComment=""):
         if isinstance(role_input, Role):
-            role_input = json.loads(role_input.to_json())
+            role_input = json.loads(role_input.to_dict())
         payload = {
             "saveComment": saveComment,
             "role": role_input
@@ -164,7 +164,7 @@ class Users(BaseService):
 
     def add(self, user_input, saveComment=""):
         if isinstance(user_input, User):
-            user_input = json.loads(user_input.to_json())
+            user_input = json.loads(user_input.to_dict())
         payload = {
             "saveComment": saveComment,
             "user": user_input

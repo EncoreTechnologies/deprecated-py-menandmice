@@ -181,7 +181,7 @@ class Client(BaseObject):
         return json_obj
 
     def get(self, url):
-        print(url)
+        print("GET " + url)
         response = self.session.get(url)
         return_val = ""
         print(response.status_code)
@@ -201,6 +201,7 @@ class Client(BaseObject):
         return return_val
 
     def post(self, url, payload):
+        print("POST " + url)
         sanitized_payload = self.sanitize_json(payload)
         print(sanitized_payload)
         response = self.session.post(url, json=sanitized_payload)
@@ -216,6 +217,7 @@ class Client(BaseObject):
         return response.json()
 
     def delete(self, url):
+        print("DELETE " + url)
         response = self.session.delete(url)
         return_status = ""
         if response.status_code == 204:
@@ -232,7 +234,7 @@ class Client(BaseObject):
         return return_status
 
     def put(self, url, payload, sanitize_override=False):
-        print(url)
+        print("PUT " + url)
         if not sanitize_override:
             payload = self.sanitize_json(payload)
         print(payload)
@@ -274,14 +276,29 @@ class Client(BaseObject):
         query_string = self.make_query_str(**kwargs)
         access_response_json = self.get(
             "{0}{1}/Access{2}".format(self.baseurl, ref, query_string))
+        print access_response_json['result']
         access_object = self.buildAccess(
             access_response_json['result']['objectAccess'])
         return access_object
 
     def setItemAccess(self, ref, identity_access, object_type, saveComment):
+        if isinstance(identity_access, ObjectAccess):
+            print "converting to identity access: " + json.dumps(identity_access.to_dict())
+            identity_access = identity_access.identityAccess
+            print type(identity_access)
         if isinstance(identity_access, IdentityAccess):
-            identity_access = json.loads(identity_access.to_json())
-        if not isinstance(identity_access, list):
+            print "converting to json"
+            identity_access = json.loads(identity_access.to_dict())
+        if isinstance(identity_access, list):
+            print "converting to list json"
+            json_access_list = []
+            for access in identity_access:
+                if isinstance(access, IdentityAccess):
+                    json_access_list.append(access.to_dict())
+                else:  # assume it's json
+                    json_access_list.append(access)
+            identity_access = json_access_list
+        else:
             identity_access = [identity_access]
         payload = {
             "objType": object_type,
@@ -321,7 +338,7 @@ class Client(BaseObject):
 
     def newCustomProperty(self, ref, property_definition, saveComment):
         if isinstance(property_definition, PropertyDefinition):
-            property_definition = json.loads(property_definition.to_json())
+            property_definition = json.loads(property_definition.to_dict())
         url = "{0}{1}/PropertyDefinitions".format(self.baseurl, ref)
         payload = {
             'saveComment': saveComment,
@@ -335,7 +352,7 @@ class Client(BaseObject):
                                   updateExisting,
                                   saveComment):
         if isinstance(property_definition, PropertyDefinition):
-            property_definition = json.loads(property_definition.to_json())
+            property_definition = json.loads(property_definition.to_dict())
         payload = {
             'updateExisting': updateExisting,
             'saveComment': saveComment,

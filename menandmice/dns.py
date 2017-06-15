@@ -151,7 +151,7 @@ class DNSZones(BaseService):
 
     def add(self, dnsZone_input, masterZones="", saveComment=""):
         if isinstance(dnsZone_input, DNSZone):
-            dnsZone_input = json.loads(dnsZone_input.to_json())
+            dnsZone_input = json.loads(dnsZone_input.to_dict())
         payload = {
             "masters": masterZones,
             "saveComment": saveComment,
@@ -211,7 +211,7 @@ class DNSZones(BaseService):
 
     def addGenerateDirective(self, zone_ref, dnsGenerateDirective_input, saveComment=""):
         if isinstance(dnsGenerateDirective_input, DNSGenerateDirective):
-            dnsGenerateDirective_input = json.loads(dnsGenerateDirective_input.to_json())
+            dnsGenerateDirective_input = json.loads(dnsGenerateDirective_input.to_dict())
         payload = {
             "saveComment": saveComment,
             "dnsGenerateDirective": dnsGenerateDirective_input
@@ -234,7 +234,7 @@ class DNSZones(BaseService):
 
     def updateZoneOptions(self, zone_ref, dns_options_input, saveComment=""):
         if isinstance(dns_options_input, DNSZoneOptions):
-            dns_options_input = json.loads(dns_options_input.to_json())
+            dns_options_input = json.loads(dns_options_input.to_dict())
         payload = {
             "saveComment": saveComment,
             "dnsZoneOptions": dns_options_input
@@ -264,7 +264,7 @@ class DNSRecords(BaseService):
             dnsZoneRef="",
             forceOverride=""):
         if isinstance(dnsRecord_input, DNSRecord):
-            dnsRecord_input = json.loads(dnsRecord_input.to_json())
+            dnsRecord_input = json.loads(dnsRecord_input.to_dict())
         if not isinstance(dnsRecord_input, list):
             dnsRecord_input = [dnsRecord_input]
         payload = {

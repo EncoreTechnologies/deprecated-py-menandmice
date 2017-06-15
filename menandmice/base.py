@@ -22,6 +22,9 @@ class BaseObject(object):
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__)
 
+    def to_dict(self):
+        return json.loads(self.to_json())
+
     def json_to_class(self, json_input, clazz):
         if isinstance(json_input, basestring):
             json_input = json.loads(json_input)

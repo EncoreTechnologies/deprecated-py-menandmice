@@ -153,10 +153,10 @@ class Ranges(BaseService):
 
     def add(self, range_input, discovery="", saveComment=""):
         if isinstance(range_input, Range):
-            range_input = json.loads(range_input.to_json())
+            range_input = json.loads(range_input.to_dict())
         if discovery:
             if isinstance(discovery, Discovery):
-                discovery = json.loads(discovery.to_json())
+                discovery = json.loads(discovery.to_dict())
         payload = {
             "discovery": discovery,
             "saveComment": saveComment,
@@ -257,7 +257,7 @@ class Interfaces(BaseService):
 
     def add(self, interface_input, saveComment=""):
         if isinstance(interface_input, Interface):
-            interface_input = json.loads(interface_input.to_json())
+            interface_input = json.loads(interface_input.to_dict())
         payload = {
             "saveComment": saveComment,
             "interface": interface_input
@@ -281,7 +281,7 @@ class Devices(BaseService):
 
     def add(self, device_input, saveComment=""):
         if isinstance(device_input, Device):
-            device_input = json.loads(device_input.to_json())
+            device_input = json.loads(device_input.to_dict())
         payload = {
             "saveComment": saveComment,
             "device": device_input
@@ -364,7 +364,7 @@ class Folders(BaseService):
 
     def add(self, folder_input, saveComment=""):
         if isinstance(folder_input, Folder):
-            folder_input = json.loads(folder_input.to_json())
+            folder_input = json.loads(folder_input.to_dict())
         payload = {
             "saveComment": saveComment,
             "folder": folder_input
