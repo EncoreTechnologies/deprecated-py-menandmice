@@ -37,28 +37,18 @@ from menandmice.users import Users
 
 class ObjectAccess(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.getValue('ref', kwargs)
-        self.name = self.getValue('name', kwargs)
-        self.identityAccess = self.buildIdentityAccess(
-            self.getValue('identityAccess', kwargs))
-
-    def buildIdentityAccess(self, identityAccess):
-        all_identityAccess = []
-        if identityAccess:
-            if isinstance(identityAccess, list):
-                for identity in identityAccess:
-                    all_identityAccess.append(IdentityAccess(**identity))
-            else:
-                all_identityAccess.append(IdentityAccess(**identityAccess))
-        return all_identityAccess
+        self.ref = self.get_value('ref', **kwargs)
+        self.name = self.get_value('name', **kwargs)
+        self.identityAccess = self.build_obj_list(IdentityAccess,
+                                                  self.get_value('identityAccess', **kwargs))
 
 
 class IdentityAccess(BaseObject):
-    def __init__(self, identityRef="", identityName="", accessEntries="", **kwargs):
-        self.identityRef = self.getValue('identityRef', kwargs)
-        self.identityName = self.getValue('identityName', kwargs)
+    def __init__(self, **kwargs):
+        self.identityRef = self.get_value('identityRef', **kwargs)
+        self.identityName = self.get_value('identityName', **kwargs)
         self.accessEntries = self.buildAccessEntries(
-            self.getValue('accessEntries', kwargs))
+            self.get_value('accessEntries', **kwargs))
 
     def buildAccessEntries(self, accessEntries):
         all_accessEntries = []
@@ -72,34 +62,34 @@ class IdentityAccess(BaseObject):
 
 
 class AccessEntry(BaseObject):
-    def __init__(self, name="", access="", **kwargs):
-        self.name = self.getValue('name', kwargs)
-        self.access = self.getValue('access', kwargs)
+    def __init__(self, **kwargs):
+        self.name = self.get_value('name', **kwargs)
+        self.access = self.get_value('access', **kwargs)
 
 
 class Event(BaseObject):
     def __init__(self, **kwargs):
-        self.eventType = self.getValue('eventType', kwargs)
-        self.objType = self.getValue('objType', kwargs)
-        self.objRef = self.getValue('objRef', kwargs)
-        self.objName = self.getValue('objName', kwargs)
-        self.timestamp = self.getValue('timestamp', kwargs)
-        self.username = self.getValue('username', kwargs)
-        self.saveComment = self.getValue('saveComment', kwargs)
-        self.eventText = self.getValue('eventText', kwargs)
+        self.eventType = self.get_value('eventType', **kwargs)
+        self.objType = self.get_value('objType', **kwargs)
+        self.objRef = self.get_value('objRef', **kwargs)
+        self.objName = self.get_value('objName', **kwargs)
+        self.timestamp = self.get_value('timestamp', **kwargs)
+        self.username = self.get_value('username', **kwargs)
+        self.saveComment = self.get_value('saveComment', **kwargs)
+        self.eventText = self.get_value('eventText', **kwargs)
 
 
 class PropertyDefinition(BaseObject):
     def __init__(self, **kwargs):
-        self.name = self.getValue('name', kwargs)
-        self.type = self.getValue('type', kwargs)
-        self.system = self.getValue('system', kwargs)
-        self.mandatory = self.getValue('mandatory', kwargs)
-        self.readOnly = self.getValue('readOnly', kwargs)
-        self.multiLine = self.getValue('multiLine', kwargs)
-        self.defaultValue = self.getValue('defaultValue', kwargs)
-        self.listItems = self.getValue('listItems', kwargs)
-        self.parentProperty = self.getValue('parentProperty', kwargs)
+        self.name = self.get_value('name', **kwargs)
+        self.type = self.get_value('type', **kwargs)
+        self.system = self.get_value('system', **kwargs)
+        self.mandatory = self.get_value('mandatory', **kwargs)
+        self.readOnly = self.get_value('readOnly', **kwargs)
+        self.multiLine = self.get_value('multiLine', **kwargs)
+        self.defaultValue = self.get_value('defaultValue', **kwargs)
+        self.listItems = self.get_value('listItems', **kwargs)
+        self.parentProperty = self.get_value('parentProperty', **kwargs)
 
 
 class Client(BaseObject):
@@ -121,70 +111,70 @@ class Client(BaseObject):
         self.ChangeRequests = ChangeRequests(self)
 
     def newDnsZone(self, **kwargs):
-        return DNSZone(kwargs)
+        return DNSZone(**kwargs)
 
     def newDnsRecord(self, **kwargs):
-        return DNSRecords(kwargs)
+        return DNSRecords(**kwargs)
 
     def newDnsView(self, **kwargs):
-        return DNSView(kwargs)
+        return DNSView(**kwargs)
 
     def newDnsGenerateDirective(self, **kwargs):
-        return DNSGenerateDirective(kwargs)
+        return DNSGenerateDirective(**kwargs)
 
     def newDnsZoneOptions(self, **kwargs):
-        return DNSZoneOptions(kwargs)
+        return DNSZoneOptions(**kwargs)
 
     def newFolder(self, **kwargs):
-        return Folder(kwargs)
+        return Folder(**kwargs)
 
     def newObjectAccess(self, **kwargs):
-        return ObjectAccess(kwargs)
+        return ObjectAccess(**kwargs)
 
     def newIdentityAccess(self, **kwargs):
-        return IdentityAccess(kwargs)
+        return IdentityAccess(**kwargs)
 
     def newAccessEntry(self, **kwargs):
-        return AccessEntry(kwargs)
+        return AccessEntry(**kwargs)
 
     def newEvent(self, **kwargs):
-        return Event(kwargs)
+        return Event(**kwargs)
 
     def newPropertyDefinition(self, **kwargs):
-        return PropertyDefinition(kwargs)
+        return PropertyDefinition(**kwargs)
 
     def newRole(self, **kwargs):
-        return Role(kwargs)
+        return Role(**kwargs)
 
     def newGroup(self, **kwargs):
-        return Group(kwargs)
+        return Group(**kwargs)
 
     def newUser(self, **kwargs):
-        return User(kwargs)
+        return User(**kwargs)
 
     def newIpamRecord(self, **kwargs):
-        return IPAMRecord(kwargs)
+        return IPAMRecord(**kwargs)
 
     def newRange(self, **kwargs):
-        return Range(kwargs)
+        return Range(**kwargs)
 
     def newDiscovery(self, **kwargs):
-        return Discovery(kwargs)
+        return Discovery(**kwargs)
 
     def newAddressBlock(self, **kwargs):
-        return AddressBlock(kwargs)
+        return AddressBlock(**kwargs)
 
     def newRangeStatisticsResponse(self, **kwargs):
-        return GetRangeStatisticsResponse(kwargs)
+        return GetRangeStatisticsResponse(**kwargs)
 
     def newInterface(self, **kwargs):
-        return Interface(kwargs)
+        return Interface(**kwargs)
 
     def newDevice(self, **kwargs):
-        return Device(kwargs)
+        return Device(**kwargs)
 
     def newChangeRequest(self, **kwargs):
-        return ChangeRequest(kwargs)
+        return ChangeRequest(**kwargs)
 
     def sanitize_json(self, json_obj):
         for k, v in json_obj.items():
@@ -270,14 +260,8 @@ class Client(BaseObject):
                 response.raise_for_status()
         return return_status
 
-    def deleteItem(self, ref, kwargs):
-        query_string = ""
-        if kwargs:
-            for key, value in kwargs.items():
-                if not query_string:
-                    query_string += "?{0}={1}".format(key, value)
-                else:
-                    query_string += "&{0}={1}".format(key, value)
+    def deleteItem(self, ref, **kwargs):
+        query_string = self.make_query_str(**kwargs)
         return self.delete("{0}{1}{2}".format(self.baseurl, ref, query_string))
 
     def updateItem(self, ref, properties, objType, saveComment, deleteUnspecified):
@@ -293,18 +277,10 @@ class Client(BaseObject):
         return self.put("{0}{1}".format(self.baseurl, ref), payload)
 
     def buildAccess(self, json_input):
-        if isinstance(json_input, basestring):
-            json_input = json.loads(json_input)
-        return ObjectAccess(**json_input)
+        return self.json_to_class(json_input, ObjectAccess)
 
-    def getItemAccess(self, ref, kwargs):
-        query_string = ""
-        if kwargs:
-            for key, value in kwargs.items():
-                if not query_string:
-                    query_string += "?{0}={1}".format(key, value)
-                else:
-                    query_string += "&{0}={1}".format(key, value)
+    def getItemAccess(self, ref, **kwargs):
+        query_string = self.make_query_str(**kwargs)
         access_response_json = self.get(
             "{0}{1}/Access{2}".format(self.baseurl, ref, query_string))
         access_object = self.buildAccess(
@@ -325,18 +301,10 @@ class Client(BaseObject):
         return self.put("{0}{1}/Access".format(self.baseurl, ref), payload)
 
     def buildEvent(self, json_input):
-        if isinstance(json_input, basestring):
-            json_input = json.loads(json_input)
-        return Event(**json_input)
+        return self.json_to_class(json_input, Event)
 
-    def getItemHistory(self, ref, kwargs):
-        query_string = ""
-        if kwargs:
-            for key, value in kwargs.items():
-                if not query_string:
-                    query_string += "?{0}={1}".format(key, value)
-                else:
-                    query_string += "&{0}={1}".format(key, value)
+    def getItemHistory(self, ref, **kwargs):
+        query_string = self.make_query_str(**kwargs)
         history_response_json = self.get(
             "{0}{1}/History{2}".format(self.baseurl, ref, query_string))
         all_events = []
@@ -345,9 +313,7 @@ class Client(BaseObject):
         return all_events
 
     def buildDefinition(self, json_input):
-        if isinstance(json_input, basestring):
-            json_input = json.loads(json_input)
-        return PropertyDefinition(**json_input)
+        return self.json_to_class(json_input, PropertyDefinition)
 
     def getPropertyDefinitions(self, ref, property_name):
         url = ""

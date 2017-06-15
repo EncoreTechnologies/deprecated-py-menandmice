@@ -7,170 +7,146 @@ from menandmice.base import BaseService
 
 class DNSZone(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.getValue('ref', kwargs)
-        self.name = self.getValue('name', kwargs)
-        self.dnsScopeName = self.getValue('dnsScopeName', kwargs)
-        self.dynamic = self.getValue('dynamic', kwargs)
-        self.adIntegrated = self.getValue('adIntegrated', kwargs)
-        self.adReplicationType = self.getValue('adReplicationType', kwargs)
-        self.adPartition = self.getValue('adPartition', kwargs)
-        self.dnsViewRef = self.getValue('dnsViewRef', kwargs)
-        self.dnsViewRefs = self.getValue('dnsViewRefs', kwargs)
-        self.authority = self.getValue('authority', kwargs)
-        self.type = self.getValue('type', kwargs)
-        self.dnssecSigned = self.getValue('dnssecSigned', kwargs)
-        self.kskIDs = self.getValue('kskIDs', kwargs)
-        self.zskIDs = self.getValue('zskIDs', kwargs)
-        self.customProperties = self.getValue('customProperties', kwargs)
+        self.ref = self.get_value('ref', kwargs)
+        self.name = self.get_value('name', kwargs)
+        self.dnsScopeName = self.get_value('dnsScopeName', kwargs)
+        self.dynamic = self.get_value('dynamic', kwargs)
+        self.adIntegrated = self.get_value('adIntegrated', kwargs)
+        self.adReplicationType = self.get_value('adReplicationType', kwargs)
+        self.adPartition = self.get_value('adPartition', kwargs)
+        self.dnsViewRef = self.get_value('dnsViewRef', kwargs)
+        self.dnsViewRefs = self.get_value('dnsViewRefs', kwargs)
+        self.authority = self.get_value('authority', kwargs)
+        self.type = self.get_value('type', kwargs)
+        self.dnssecSigned = self.get_value('dnssecSigned', kwargs)
+        self.kskIDs = self.get_value('kskIDs', kwargs)
+        self.zskIDs = self.get_value('zskIDs', kwargs)
+        self.customProperties = self.get_value('customProperties', kwargs)
 
 
 class DNSZoneOptions(BaseObject):
     def __init__(self, **kwargs):
-        self.zonetype = self.getValue('zonetype', kwargs)
-        self.timestamp = self.getValue('timestamp', kwargs)
-        self.masters = self.getValue('masters', kwargs)
-        self.msSpecific = self.buildObj(MSSpecificDNSZoneOptions,
-                                        self.getValue('msSpecific', kwargs))
-        self.bindSpecific = self.buildObj(BINDSpecificDNSZoneOptions,
-                                          self.getValue('bindSpecific', kwargs))
-        self.dnssec = self.buildObj(DNSSECZoneOptions,
-                                    self.getValue('dnssec', kwargs))
-        self.additional = self.getValue('additional', kwargs)
+        self.zonetype = self.get_value('zonetype', kwargs)
+        self.timestamp = self.get_value('timestamp', kwargs)
+        self.masters = self.get_value('masters', kwargs)
+        self.msSpecific = self.build_obj(MSSpecificDNSZoneOptions,
+                                        self.get_value('msSpecific', kwargs))
+        self.bindSpecific = self.build_obj(BINDSpecificDNSZoneOptions,
+                                          self.get_value('bindSpecific', kwargs))
+        self.dnssec = self.build_obj(DNSSECZoneOptions,
+                                    self.get_value('dnssec', kwargs))
+        self.additional = self.get_value('additional', kwargs)
 
 
 class MSSpecificDNSZoneOptions(BaseObject):
     def __init__(self, **kwargs):
-        self.notify = self.buildObj(NotifyOption,
-                                    self.getValue('notify', kwargs))
-        self.allowTransferData = self.buildObj(AllowTransferOption,
-                                               self.getValue('allowTransferData', kwargs))
-        self.allowUpdate = self.getValue('allowUpdate', kwargs)
-        self.scavenge = self.buildObj(ScavengeOption,
-                                      self.getValue('scavenge', kwargs))
-        self.replication = self.buildObj(ADReplicationOption,
-                                         self.getValue('replication', kwargs))
+        self.notify = self.build_obj(NotifyOption,
+                                    self.get_value('notify', kwargs))
+        self.allowTransferData = self.build_obj(AllowTransferOption,
+                                               self.get_value('allowTransferData', kwargs))
+        self.allowUpdate = self.get_value('allowUpdate', kwargs)
+        self.scavenge = self.build_obj(ScavengeOption,
+                                      self.get_value('scavenge', kwargs))
+        self.replication = self.build_obj(ADReplicationOption,
+                                         self.get_value('replication', kwargs))
 
 
 class NotifyOption(BaseObject):
     def __init__(self, **kwargs):
-        self.authoritative = self.getValue('authoritative', kwargs)
-        self.alsoNotify = self.getValue('alsoNotify', kwargs)
+        self.authoritative = self.get_value('authoritative', kwargs)
+        self.alsoNotify = self.get_value('alsoNotify', kwargs)
 
 
 class AllowTransferOption(BaseObject):
     def __init__(self, **kwargs):
-        self.allowTo = self.getValue('allowTo', kwargs)
-        self.allowToServers = self.getValue('allowToServers', kwargs)
+        self.allowTo = self.get_value('allowTo', kwargs)
+        self.allowToServers = self.get_value('allowToServers', kwargs)
 
 
 class ScavengeOption(BaseObject):
     def __init__(self, **kwargs):
-        self.noRefresh = self.getValue('noRefresh', kwargs)
-        self.refresh = self.getValue('refresh', kwargs)
+        self.noRefresh = self.get_value('noRefresh', kwargs)
+        self.refresh = self.get_value('refresh', kwargs)
 
 
 class ADReplicationOption(BaseObject):
     def __init__(self, **kwargs):
-        self.type = self.getValue('type', kwargs)
-        self.partition = self.getValue('partition', kwargs)
+        self.type = self.get_value('type', kwargs)
+        self.partition = self.get_value('partition', kwargs)
 
 
 class BINDSpecificDNSZoneOptions(BaseObject):
     def __init__(self, **kwargs):
-        self.allowQuery = self.getValue('allowQuery', kwargs)
-        self.allowTransfer = self.getValue('allowTransfer', kwargs)
-        self.zonefile = self.getValue('zonefile', kwargs)
-        self.forwarders = self.getValue('forwarders', kwargs)
+        self.allowQuery = self.get_value('allowQuery', kwargs)
+        self.allowTransfer = self.get_value('allowTransfer', kwargs)
+        self.zonefile = self.get_value('zonefile', kwargs)
+        self.forwarders = self.get_value('forwarders', kwargs)
 
 
 class DNSSECZoneOptions(BaseObject):
     def __init__(self, **kwargs):
-        self.SignWithNSEC3 = self.getValue('SignWithNSEC3', kwargs)
-        self.NSEC3OptOut = self.getValue('NSEC3OptOut', kwargs)
-        self.NSEC3RandomSaltLength = self.getValue('NSEC3RandomSaltLength', kwargs)
-        self.NSEC3Iterations = self.getValue('NSEC3Iterations', kwargs)
-        self.DSRecordSetTTL = self.getValue('DSRecordSetTTL', kwargs)
-        self.DNSKEYRecordSetTTL = self.getValue('DNSKEYRecordSetTTL', kwargs)
-        self.DsRecordAlgorithms = self.getValue('DsRecordAlgorithms', kwargs)
-        self.MaintainTrustAnchor = self.getValue('MaintainTrustAnchor', kwargs)
-        self.Keymaster = self.getValue('Keymaster', kwargs)
-        self.ParentHasSecureDelegation = self.getValue('ParentHasSecureDelegation', kwargs)
-        self.RFC5011KeyRollovers = self.getValue('RFC5011KeyRollovers', kwargs)
-        self.SecureDelegationPollingPeriod = self.getValue('SecureDelegationPollingPeriod', kwargs)
-        self.SignatureInceptionOffset = self.getValue('SignatureInceptionOffset', kwargs)
-        self.NSEC3UserSalt = self.getValue('NSEC3UserSalt', kwargs)
-        self.NSEC3CurrentSalt = self.getValue('NSEC3CurrentSalt', kwargs)
-        self.NSEC3HashAlgorithm = self.getValue('NSEC3HashAlgorithm', kwargs)
+        self.SignWithNSEC3 = self.get_value('SignWithNSEC3', kwargs)
+        self.NSEC3OptOut = self.get_value('NSEC3OptOut', kwargs)
+        self.NSEC3RandomSaltLength = self.get_value('NSEC3RandomSaltLength', kwargs)
+        self.NSEC3Iterations = self.get_value('NSEC3Iterations', kwargs)
+        self.DSRecordSetTTL = self.get_value('DSRecordSetTTL', kwargs)
+        self.DNSKEYRecordSetTTL = self.get_value('DNSKEYRecordSetTTL', kwargs)
+        self.DsRecordAlgorithms = self.get_value('DsRecordAlgorithms', kwargs)
+        self.MaintainTrustAnchor = self.get_value('MaintainTrustAnchor', kwargs)
+        self.Keymaster = self.get_value('Keymaster', kwargs)
+        self.ParentHasSecureDelegation = self.get_value('ParentHasSecureDelegation', kwargs)
+        self.RFC5011KeyRollovers = self.get_value('RFC5011KeyRollovers', kwargs)
+        self.SecureDelegationPollingPeriod = self.get_value('SecureDelegationPollingPeriod', kwargs)
+        self.SignatureInceptionOffset = self.get_value('SignatureInceptionOffset', kwargs)
+        self.NSEC3UserSalt = self.get_value('NSEC3UserSalt', kwargs)
+        self.NSEC3CurrentSalt = self.get_value('NSEC3CurrentSalt', kwargs)
+        self.NSEC3HashAlgorithm = self.get_value('NSEC3HashAlgorithm', kwargs)
 
 
 class DNSGenerateDirective(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.getValue('ref', kwargs)
-        self.rangeStart = self.getValue('rangeStart', kwargs)
-        self.rangeEnd = self.getValue('rangeEnd', kwargs)
-        self.lhs = self.getValue('lhs', kwargs)
-        self.dumbclass = self.getValue('dumbclass', kwargs)
-        self.type = self.getValue('type', kwargs)
-        self.rhs = self.getValue('rhs', kwargs)
+        self.ref = self.get_value('ref', kwargs)
+        self.rangeStart = self.get_value('rangeStart', kwargs)
+        self.rangeEnd = self.get_value('rangeEnd', kwargs)
+        self.lhs = self.get_value('lhs', kwargs)
+        self.dumbclass = self.get_value('dumbclass', kwargs)
+        self.type = self.get_value('type', kwargs)
+        self.rhs = self.get_value('rhs', kwargs)
 
 
 class DNSRecord(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.getValue('ref', kwargs)
-        self.name = self.getValue('name', kwargs)
-        self.type = self.getValue('type', kwargs)
-        self.ttl = self.getValue('ttl', kwargs)
-        self.data = self.getValue('data', kwargs)
-        self.comment = self.getValue('comment', kwargs)
-        self.enabled = self.getValue('enabled', kwargs)
-        self.aging = self.getValue('aging', kwargs)
-        self.dnsZoneRef = self.getValue('dnsZoneRef', kwargs)
+        self.ref = self.get_value('ref', kwargs)
+        self.name = self.get_value('name', kwargs)
+        self.type = self.get_value('type', kwargs)
+        self.ttl = self.get_value('ttl', kwargs)
+        self.data = self.get_value('data', kwargs)
+        self.comment = self.get_value('comment', kwargs)
+        self.enabled = self.get_value('enabled', kwargs)
+        self.aging = self.get_value('aging', kwargs)
+        self.dnsZoneRef = self.get_value('dnsZoneRef', kwargs)
 
 
 class DNSView(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.getValue('ref', kwargs)
-        self.name = self.getValue('name', kwargs)
-        self.dnsServerRef = self.getValue('dnsServerRef', kwargs)
+        self.ref = self.get_value('ref', kwargs)
+        self.name = self.get_value('name', kwargs)
+        self.dnsServerRef = self.get_value('dnsServerRef', kwargs)
 
 
 class DNSZones(BaseService):
     def __init__(self, client):
-        super(DNSZones, self).__init__(client, "DNSZones")
-
-    def build(self, json_input):
-        if isinstance(json_input, basestring):
-            json_input = json.loads(json_input)
-        return DNSZone(**json_input)
+        super(DNSZones, self).__init__(client=client,
+                                       url_base="DNSZones",
+                                       entity_class=DNSZone,
+                                       get_response_entity_key="dnsZone",
+                                       get_response_all_key="dnsZones")
 
     def build_directive(self, json_input):
-        if isinstance(json_input, basestring):
-            json_input = json.loads(json_input)
-        return DNSGenerateDirective(**json_input)
+        return self.json_to_clazz(json_input, DNSGenerateDirective)
 
     def build_options(self, json_input):
-        if isinstance(json_input, basestring):
-            json_input = json.loads(json_input)
-        return DNSZoneOptions(**json_input)
-
-    def get(self, zone_ref="", **kwargs):
-        all_zones = []
-        if not zone_ref:
-            query_string = ""
-            if kwargs:
-                for key, value in kwargs.items():
-                    if not query_string:
-                        query_string += "?{0}={1}".format(key, value)
-                    else:
-                        query_string += "&{0}={1}".format(key, value)
-            dns_zone_response = self.client.get("{0}{1}{2}".format(self.client.baseurl,
-                                                                   self.url_base, query_string))
-            for zone in dns_zone_response['result']['dnsZones']:
-                all_zones.append(self.build(zone))
-        else:
-            dns_zone_response = self.client.get("{0}{1}".format(self.client.baseurl, zone_ref))
-            all_zones.append(self.build(dns_zone_response['result']['dnsZone']))
-        return all_zones
+        return self.json_to_clazz(json_input, DNSZoneOptions)
 
     def add(self, dnsZone_input, masterZones="", saveComment=""):
         if isinstance(dnsZone_input, DNSZone):
@@ -180,19 +156,15 @@ class DNSZones(BaseService):
             "saveComment": saveComment,
             "dnsZone": dnsZone_input
         }
-        zone_json = self.client.post("{0}{1}".format(self.client.baseurl, self.url_base), payload)
+        zone_json = self.client.post("{0}{1}".format(self.client.baseurl,
+                                                     self.url_base),
+                                     payload)
         dns_zone_return = self.get(zone_json['result']['ref'])
         return dns_zone_return[0]
 
     def getRecords(self, zone_ref, **kwargs):
         all_records = []
-        query_string = ""
-        if kwargs:
-            for key, value in kwargs.items():
-                if not query_string:
-                    query_string += "?{0}={1}".format(key, value)
-                else:
-                    query_string += "&{0}={1}".format(key, value)
+        query_string = self.make_query_str(**kwargs)
         dns_record_response = self.client.get("{0}{1}/DNSRecords{2}".format(self.client.baseurl,
                                                                             zone_ref,
                                                                             query_string))
@@ -201,26 +173,14 @@ class DNSZones(BaseService):
         return all_records
 
     def getZoneFolder(self, zone_ref, **kwargs):
-        query_string = ""
-        if kwargs:
-            for key, value in kwargs.items():
-                if not query_string:
-                    query_string += "?{0}={1}".format(key, value)
-                else:
-                    query_string += "&{0}={1}".format(key, value)
+        query_string = self.make_query_str(**kwargs)
         folder_response = self.client.get("{0}{1}/Folders{2}".format(self.client.baseurl,
                                                                      zone_ref,
                                                                      query_string))
         return Folders(self.client).get(folder_response['result']['folder'])
 
     def deleteZoneFromFolder(self, zone_ref, folder_ref="", **kwargs):
-        query_string = ""
-        if kwargs:
-            for key, value in kwargs.items():
-                if not query_string:
-                    query_string += "?{0}={1}".format(key, value)
-                else:
-                    query_string += "&{0}={1}".format(key, value)
+        query_string = self.make_query_str(**kwargs)
         if folder_ref:
             url = "{0}{1}/{2}{3}".format(self.client.baseurl, zone_ref, folder_ref, query_string)
         else:
@@ -281,13 +241,7 @@ class DNSZones(BaseService):
         return self.client.put("{0}{1}/Options".format(self.client.baseurl, zone_ref), payload)
 
     def getZoneScopes(self, zone_ref, **kwargs):
-        query_string = ""
-        if kwargs:
-            for key, value in kwargs.items():
-                if not query_string:
-                    query_string += "?{0}={1}".format(key, value)
-                else:
-                    query_string += "&{0}={1}".format(key, value)
+        query_string = self.make_query_str(**kwargs)
         dns_zone_response = self.client.get("{0}{1}/Scopes{2}".format(self.client.baseurl,
                                                                       zone_ref,
                                                                       query_string))
@@ -296,18 +250,12 @@ class DNSZones(BaseService):
 
 class DNSRecords(BaseService):
     def __init__(self, client):
-        super(DNSRecords, self).__init__(client, "DNSRecords")
-
-    def build(self, json_input):
-        if isinstance(json_input, basestring):
-            json_input = json.loads(json_input)
-        return DNSRecord(**json_input)
-
-    def get(self, record_ref):
-        all_records = []
-        dns_record_response = self.client.get("{0}{1}".format(self.client.baseurl, record_ref))
-        all_records.append(self.build(dns_record_response['result']['dnsRecord']))
-        return all_records
+        super(DNSRecords, self).__init__(client=client,
+                                         url_base="DNSRecords",
+                                         entity_class=DNSRecord,
+                                         get_response_entity_key="dnsRecord",
+                                         get_response_all_key="dnsRecords",
+                                         get_is_singular=True)
 
     def add(self, dnsRecord_input,
             saveComment="",
@@ -339,17 +287,11 @@ class DNSRecords(BaseService):
             "{0}{1}/RelatedDNSRecords".format(self.client.baseurl,
                                               record_ref))
         for record in dns_record_response['result']['dnsRecords']:
-                all_records.append(self.build(record))
+            all_records.append(self.build(record))
         return all_records
 
     def deleteRelatedRecords(self, record_ref, **kwargs):
-        query_string = ""
-        if kwargs:
-            for key, value in kwargs.items():
-                if not query_string:
-                    query_string += "?{0}={1}".format(key, value)
-                else:
-                    query_string += "&{0}={1}".format(key, value)
+        query_string = self.make_query_str(**kwargs)
         return self.client.delete(
             "{0}{1}/RelatedDNSRecords{2}".format(self.client.baseurl,
                                                  record_ref,
@@ -358,37 +300,16 @@ class DNSRecords(BaseService):
 
 class DNSViews(BaseService):
     def __init__(self, client):
-        super(DNSViews, self).__init__(client, "DNSViews")
-
-    def build(self, json_input):
-        if isinstance(json_input, basestring):
-            json_input = json.loads(json_input)
-        return DNSView(**json_input)
-
-    def get(self, view_ref="", **kwargs):
-        all_views = []
-        if not view_ref:
-            query_string = ""
-            if kwargs:
-                for key, value in kwargs.items():
-                    if not query_string:
-                        query_string += "?{0}={1}".format(key, value)
-                    else:
-                        query_string += "&{0}={1}".format(key, value)
-            dns_view_response = self.client.get(
-                "{0}{1}{2}".format(self.client.baseurl,
-                                   self.url_base,
-                                   query_string))
-            for view in dns_view_response['result']['dnsViews']:
-                all_views.append(self.build(view))
-        else:
-            dns_view_response = self.client.get("{0}{1}".format(self.client.baseurl, view_ref))
-            all_views.append(self.build(dns_view_response['result']['dnsView']))
-        return all_views
+        super(DNSViews, self).__init__(client=client,
+                                       url_base="DNSViews",
+                                       entity_class=DNSView,
+                                       get_response_entity_key="dnsView",
+                                       get_response_all_key="dnsViews")
 
     def getZones(self, view_ref):
         all_zones = []
-        dns_zone_response = self.client.get("{0}{1}/DNSZones".format(self.client.baseurl, view_ref))
+        dns_zone_response = self.client.get("{0}{1}/DNSZones".format(self.client.baseurl,
+                                                                     view_ref))
         for zone in dns_zone_response['result']['dnsZones']:
             all_zones.append(DNSZones(self.client).build(zone))
         return all_zones
