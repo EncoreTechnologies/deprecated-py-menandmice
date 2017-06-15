@@ -7,131 +7,132 @@ from menandmice.base import BaseService
 
 class DNSZone(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', kwargs)
-        self.name = self.get_value('name', kwargs)
-        self.dnsScopeName = self.get_value('dnsScopeName', kwargs)
-        self.dynamic = self.get_value('dynamic', kwargs)
-        self.adIntegrated = self.get_value('adIntegrated', kwargs)
-        self.adReplicationType = self.get_value('adReplicationType', kwargs)
-        self.adPartition = self.get_value('adPartition', kwargs)
-        self.dnsViewRef = self.get_value('dnsViewRef', kwargs)
-        self.dnsViewRefs = self.get_value('dnsViewRefs', kwargs)
-        self.authority = self.get_value('authority', kwargs)
-        self.type = self.get_value('type', kwargs)
-        self.dnssecSigned = self.get_value('dnssecSigned', kwargs)
-        self.kskIDs = self.get_value('kskIDs', kwargs)
-        self.zskIDs = self.get_value('zskIDs', kwargs)
-        self.customProperties = self.get_value('customProperties', kwargs)
+        self.ref = self.get_value('ref', **kwargs)
+        self.name = self.get_value('name', **kwargs)
+        self.dnsScopeName = self.get_value('dnsScopeName', **kwargs)
+        self.dynamic = self.get_value('dynamic', **kwargs)
+        self.adIntegrated = self.get_value('adIntegrated', **kwargs)
+        self.adReplicationType = self.get_value('adReplicationType', **kwargs)
+        self.adPartition = self.get_value('adPartition', **kwargs)
+        self.dnsViewRef = self.get_value('dnsViewRef', **kwargs)
+        self.dnsViewRefs = self.get_value('dnsViewRefs', **kwargs)
+        self.authority = self.get_value('authority', **kwargs)
+        self.type = self.get_value('type', **kwargs)
+        self.dnssecSigned = self.get_value('dnssecSigned', **kwargs)
+        self.kskIDs = self.get_value('kskIDs', **kwargs)
+        self.zskIDs = self.get_value('zskIDs', **kwargs)
+        self.customProperties = self.get_value('customProperties', **kwargs)
 
 
 class DNSZoneOptions(BaseObject):
     def __init__(self, **kwargs):
-        self.zonetype = self.get_value('zonetype', kwargs)
-        self.timestamp = self.get_value('timestamp', kwargs)
-        self.masters = self.get_value('masters', kwargs)
+        self.zonetype = self.get_value('zonetype', **kwargs)
+        self.timestamp = self.get_value('timestamp', **kwargs)
+        self.masters = self.get_value('masters', **kwargs)
         self.msSpecific = self.build_obj(MSSpecificDNSZoneOptions,
-                                        self.get_value('msSpecific', kwargs))
+                                        self.get_value('msSpecific', **kwargs))
         self.bindSpecific = self.build_obj(BINDSpecificDNSZoneOptions,
-                                          self.get_value('bindSpecific', kwargs))
+                                          self.get_value('bindSpecific', **kwargs))
         self.dnssec = self.build_obj(DNSSECZoneOptions,
-                                    self.get_value('dnssec', kwargs))
-        self.additional = self.get_value('additional', kwargs)
+                                    self.get_value('dnssec', **kwargs))
+        self.additional = self.get_value('additional', **kwargs)
 
 
 class MSSpecificDNSZoneOptions(BaseObject):
     def __init__(self, **kwargs):
         self.notify = self.build_obj(NotifyOption,
-                                    self.get_value('notify', kwargs))
+                                    self.get_value('notify', **kwargs))
         self.allowTransferData = self.build_obj(AllowTransferOption,
-                                               self.get_value('allowTransferData', kwargs))
-        self.allowUpdate = self.get_value('allowUpdate', kwargs)
+                                               self.get_value('allowTransferData', **kwargs))
+        self.allowUpdate = self.get_value('allowUpdate', **kwargs)
         self.scavenge = self.build_obj(ScavengeOption,
-                                      self.get_value('scavenge', kwargs))
+                                      self.get_value('scavenge', **kwargs))
         self.replication = self.build_obj(ADReplicationOption,
-                                         self.get_value('replication', kwargs))
+                                         self.get_value('replication', **kwargs))
 
 
 class NotifyOption(BaseObject):
     def __init__(self, **kwargs):
-        self.authoritative = self.get_value('authoritative', kwargs)
-        self.alsoNotify = self.get_value('alsoNotify', kwargs)
+        self.authoritative = self.get_value('authoritative', **kwargs)
+        self.alsoNotify = self.get_value('alsoNotify', **kwargs)
 
 
 class AllowTransferOption(BaseObject):
     def __init__(self, **kwargs):
-        self.allowTo = self.get_value('allowTo', kwargs)
-        self.allowToServers = self.get_value('allowToServers', kwargs)
+        self.allowTo = self.get_value('allowTo', **kwargs)
+        self.allowToServers = self.get_value('allowToServers', **kwargs)
 
 
 class ScavengeOption(BaseObject):
     def __init__(self, **kwargs):
-        self.noRefresh = self.get_value('noRefresh', kwargs)
-        self.refresh = self.get_value('refresh', kwargs)
+        self.noRefresh = self.get_value('noRefresh', **kwargs)
+        self.refresh = self.get_value('refresh', **kwargs)
 
 
 class ADReplicationOption(BaseObject):
     def __init__(self, **kwargs):
-        self.type = self.get_value('type', kwargs)
-        self.partition = self.get_value('partition', kwargs)
+        self.type = self.get_value('type', **kwargs)
+        self.partition = self.get_value('partition', **kwargs)
 
 
 class BINDSpecificDNSZoneOptions(BaseObject):
     def __init__(self, **kwargs):
-        self.allowQuery = self.get_value('allowQuery', kwargs)
-        self.allowTransfer = self.get_value('allowTransfer', kwargs)
-        self.zonefile = self.get_value('zonefile', kwargs)
-        self.forwarders = self.get_value('forwarders', kwargs)
+        self.allowQuery = self.get_value('allowQuery', **kwargs)
+        self.allowTransfer = self.get_value('allowTransfer', **kwargs)
+        self.zonefile = self.get_value('zonefile', **kwargs)
+        self.forwarders = self.get_value('forwarders', **kwargs)
 
 
 class DNSSECZoneOptions(BaseObject):
     def __init__(self, **kwargs):
-        self.SignWithNSEC3 = self.get_value('SignWithNSEC3', kwargs)
-        self.NSEC3OptOut = self.get_value('NSEC3OptOut', kwargs)
-        self.NSEC3RandomSaltLength = self.get_value('NSEC3RandomSaltLength', kwargs)
-        self.NSEC3Iterations = self.get_value('NSEC3Iterations', kwargs)
-        self.DSRecordSetTTL = self.get_value('DSRecordSetTTL', kwargs)
-        self.DNSKEYRecordSetTTL = self.get_value('DNSKEYRecordSetTTL', kwargs)
-        self.DsRecordAlgorithms = self.get_value('DsRecordAlgorithms', kwargs)
-        self.MaintainTrustAnchor = self.get_value('MaintainTrustAnchor', kwargs)
-        self.Keymaster = self.get_value('Keymaster', kwargs)
-        self.ParentHasSecureDelegation = self.get_value('ParentHasSecureDelegation', kwargs)
-        self.RFC5011KeyRollovers = self.get_value('RFC5011KeyRollovers', kwargs)
-        self.SecureDelegationPollingPeriod = self.get_value('SecureDelegationPollingPeriod', kwargs)
-        self.SignatureInceptionOffset = self.get_value('SignatureInceptionOffset', kwargs)
-        self.NSEC3UserSalt = self.get_value('NSEC3UserSalt', kwargs)
-        self.NSEC3CurrentSalt = self.get_value('NSEC3CurrentSalt', kwargs)
-        self.NSEC3HashAlgorithm = self.get_value('NSEC3HashAlgorithm', kwargs)
+        self.SignWithNSEC3 = self.get_value('SignWithNSEC3', **kwargs)
+        self.NSEC3OptOut = self.get_value('NSEC3OptOut', **kwargs)
+        self.NSEC3RandomSaltLength = self.get_value('NSEC3RandomSaltLength', **kwargs)
+        self.NSEC3Iterations = self.get_value('NSEC3Iterations', **kwargs)
+        self.DSRecordSetTTL = self.get_value('DSRecordSetTTL', **kwargs)
+        self.DNSKEYRecordSetTTL = self.get_value('DNSKEYRecordSetTTL', **kwargs)
+        self.DsRecordAlgorithms = self.get_value('DsRecordAlgorithms', **kwargs)
+        self.MaintainTrustAnchor = self.get_value('MaintainTrustAnchor', **kwargs)
+        self.Keymaster = self.get_value('Keymaster', **kwargs)
+        self.ParentHasSecureDelegation = self.get_value('ParentHasSecureDelegation', **kwargs)
+        self.RFC5011KeyRollovers = self.get_value('RFC5011KeyRollovers', **kwargs)
+        self.SecureDelegationPollingPeriod = self.get_value('SecureDelegationPollingPeriod',
+                                                            **kwargs)
+        self.SignatureInceptionOffset = self.get_value('SignatureInceptionOffset', **kwargs)
+        self.NSEC3UserSalt = self.get_value('NSEC3UserSalt', **kwargs)
+        self.NSEC3CurrentSalt = self.get_value('NSEC3CurrentSalt', **kwargs)
+        self.NSEC3HashAlgorithm = self.get_value('NSEC3HashAlgorithm', **kwargs)
 
 
 class DNSGenerateDirective(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', kwargs)
-        self.rangeStart = self.get_value('rangeStart', kwargs)
-        self.rangeEnd = self.get_value('rangeEnd', kwargs)
-        self.lhs = self.get_value('lhs', kwargs)
-        self.dumbclass = self.get_value('dumbclass', kwargs)
-        self.type = self.get_value('type', kwargs)
-        self.rhs = self.get_value('rhs', kwargs)
+        self.ref = self.get_value('ref', **kwargs)
+        self.rangeStart = self.get_value('rangeStart', **kwargs)
+        self.rangeEnd = self.get_value('rangeEnd', **kwargs)
+        self.lhs = self.get_value('lhs', **kwargs)
+        self.dumbclass = self.get_value('dumbclass', **kwargs)
+        self.type = self.get_value('type', **kwargs)
+        self.rhs = self.get_value('rhs', **kwargs)
 
 
 class DNSRecord(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', kwargs)
-        self.name = self.get_value('name', kwargs)
-        self.type = self.get_value('type', kwargs)
-        self.ttl = self.get_value('ttl', kwargs)
-        self.data = self.get_value('data', kwargs)
-        self.comment = self.get_value('comment', kwargs)
-        self.enabled = self.get_value('enabled', kwargs)
-        self.aging = self.get_value('aging', kwargs)
-        self.dnsZoneRef = self.get_value('dnsZoneRef', kwargs)
+        self.ref = self.get_value('ref', **kwargs)
+        self.name = self.get_value('name', **kwargs)
+        self.type = self.get_value('type', **kwargs)
+        self.ttl = self.get_value('ttl', **kwargs)
+        self.data = self.get_value('data', **kwargs)
+        self.comment = self.get_value('comment', **kwargs)
+        self.enabled = self.get_value('enabled', **kwargs)
+        self.aging = self.get_value('aging', **kwargs)
+        self.dnsZoneRef = self.get_value('dnsZoneRef', **kwargs)
 
 
 class DNSView(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', kwargs)
-        self.name = self.get_value('name', kwargs)
-        self.dnsServerRef = self.get_value('dnsServerRef', kwargs)
+        self.ref = self.get_value('ref', **kwargs)
+        self.name = self.get_value('name', **kwargs)
+        self.dnsServerRef = self.get_value('dnsServerRef', **kwargs)
 
 
 class DNSZones(BaseService):
@@ -206,7 +207,7 @@ class DNSZones(BaseService):
         return all_directives
 
     def deleteGenerateDirective(self, directive_ref, **kwargs):
-        return self.client.deleteItem("{0}/{1}".format(self.url_base, directive_ref), kwargs)
+        return self.client.deleteItem("{0}/{1}".format(self.url_base, directive_ref), **kwargs)
 
     def addGenerateDirective(self, zone_ref, dnsGenerateDirective_input, saveComment=""):
         if isinstance(dnsGenerateDirective_input, DNSGenerateDirective):

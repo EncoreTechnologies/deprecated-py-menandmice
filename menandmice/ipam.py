@@ -6,121 +6,121 @@ from menandmice.base import BaseService
 
 class IPAMRecord(BaseObject):
     def __init__(self, **kwargs):
-        self.addrRef = self.get_value('addrRef', kwargs)
-        self.address = self.get_value('address', kwargs)
-        self.claimed = self.get_value('claimed', kwargs)
-        self.dnsHosts = self.get_value('dnsHosts', kwargs)
-        self.dhcpReservations = self.get_value('dhcpReservations', kwargs)
-        self.dhcpLeases = self.get_value('dhcpLeases', kwargs)
-        self.discoveryType = self.get_value('discoveryType', kwargs)
-        self.lastSeenDate = self.get_value('lastSeenDate', kwargs)
-        self.lastDiscoveryDate = self.get_value('lastDiscoveryDate', kwargs)
-        self.lastKnownClientIdentifier = self.get_value('lastKnownClientIdentifier', kwargs)
-        self.device = self.get_value('device', kwargs)
-        self.interface = self.get_value('interface', kwargs)
-        self.ptrStatus = self.get_value('ptrStatus', kwargs)
-        self.extraneousPTR = self.get_value('extraneousPTR', kwargs)
-        self.customProperties = self.get_value('customProperties', kwargs)
-        self.state = self.get_value('state', kwargs)
-        self.usage = self.get_value('usage', kwargs)
+        self.addrRef = self.get_value('addrRef', **kwargs)
+        self.address = self.get_value('address', **kwargs)
+        self.claimed = self.get_value('claimed', **kwargs)
+        self.dnsHosts = self.get_value('dnsHosts', **kwargs)
+        self.dhcpReservations = self.get_value('dhcpReservations', **kwargs)
+        self.dhcpLeases = self.get_value('dhcpLeases', **kwargs)
+        self.discoveryType = self.get_value('discoveryType', **kwargs)
+        self.lastSeenDate = self.get_value('lastSeenDate', **kwargs)
+        self.lastDiscoveryDate = self.get_value('lastDiscoveryDate', **kwargs)
+        self.lastKnownClientIdentifier = self.get_value('lastKnownClientIdentifier', **kwargs)
+        self.device = self.get_value('device', **kwargs)
+        self.interface = self.get_value('interface', **kwargs)
+        self.ptrStatus = self.get_value('ptrStatus', **kwargs)
+        self.extraneousPTR = self.get_value('extraneousPTR', **kwargs)
+        self.customProperties = self.get_value('customProperties', **kwargs)
+        self.state = self.get_value('state', **kwargs)
+        self.usage = self.get_value('usage', **kwargs)
 
 
 class Range(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', kwargs)
-        self.name = self.get_value('name', kwargs)
-        self.from_ = self.get_value('from', kwargs)
-        self.to = self.get_value('to', kwargs)
-        self.parentRef = self.get_value('parentRef', kwargs)
-        self.adSiteRef = self.get_value('adSiteRef', kwargs)
-        self.childRanges = self.get_value('childRanges', kwargs)
-        self.dhcpScopes = self.get_value('dhcpScopes', kwargs)
-        self.subnet = self.get_value('subnet', kwargs)
-        self.locked = self.get_value('locked', kwargs)
-        self.autoAssign = self.get_value('autoAssign', kwargs)
-        self.hasSchedule = self.get_value('hasSchedule', kwargs)
-        self.hasMonitor = self.get_value('hasMonitor', kwargs)
-        self.customProperties = self.get_value('customProperties', kwargs)
-        self.inheritAccess = self.get_value('inheritAccess', kwargs)
-        self.isContainer = self.get_value('isContainer', kwargs)
-        self.utilizationPercentage = self.get_value('utilizationPercentage', kwargs)
-        self.hasRogueAddresses = self.get_value('hasRogueAddresses', kwargs)
-        self.cloudNetworkRef = self.get_value('cloudNetworkRef', kwargs)
-        self.cloudAllocationPools = self.get_value('cloudAllocationPools', kwargs)
-        self.discoveredProperties = self.get_value('discoveredProperties', kwargs)
-        self.creationTime = self.get_value('creationTime', kwargs)
+        self.ref = self.get_value('ref', **kwargs)
+        self.name = self.get_value('name', **kwargs)
+        self.from_ = self.get_value('from', **kwargs)
+        self.to = self.get_value('to', **kwargs)
+        self.parentRef = self.get_value('parentRef', **kwargs)
+        self.adSiteRef = self.get_value('adSiteRef', **kwargs)
+        self.childRanges = self.get_value('childRanges', **kwargs)
+        self.dhcpScopes = self.get_value('dhcpScopes', **kwargs)
+        self.subnet = self.get_value('subnet', **kwargs)
+        self.locked = self.get_value('locked', **kwargs)
+        self.autoAssign = self.get_value('autoAssign', **kwargs)
+        self.hasSchedule = self.get_value('hasSchedule', **kwargs)
+        self.hasMonitor = self.get_value('hasMonitor', **kwargs)
+        self.customProperties = self.get_value('customProperties', **kwargs)
+        self.inheritAccess = self.get_value('inheritAccess', **kwargs)
+        self.isContainer = self.get_value('isContainer', **kwargs)
+        self.utilizationPercentage = self.get_value('utilizationPercentage', **kwargs)
+        self.hasRogueAddresses = self.get_value('hasRogueAddresses', **kwargs)
+        self.cloudNetworkRef = self.get_value('cloudNetworkRef', **kwargs)
+        self.cloudAllocationPools = self.get_value('cloudAllocationPools', **kwargs)
+        self.discoveredProperties = self.get_value('discoveredProperties', **kwargs)
+        self.creationTime = self.get_value('creationTime', **kwargs)
 
 
 class Discovery(BaseObject):
     def __init__(self, **kwargs):
-        self.interval = self.get_value('interval', kwargs)
-        self.unit = self.get_value('unit', kwargs)
-        self.enabled = self.get_value('enabled', kwargs)
-        self.startTime = self.get_value('startTime', kwargs)
+        self.interval = self.get_value('interval', **kwargs)
+        self.unit = self.get_value('unit', **kwargs)
+        self.enabled = self.get_value('enabled', **kwargs)
+        self.startTime = self.get_value('startTime', **kwargs)
 
 
 class AddressBlock(BaseObject):
     def __init__(self, **kwargs):
-        self.from_ = self.get_value('from', kwargs)
-        self.to = self.get_value('to', kwargs)
+        self.from_ = self.get_value('from', **kwargs)
+        self.to = self.get_value('to', **kwargs)
 
 
 class GetRangeStatisticsResponse(BaseObject):
     def __init__(self, **kwargs):
-        self.used = self.get_value('used', kwargs)
-        self.free = self.get_value('free', kwargs)
-        self.numInSubranges = self.get_value('numInSubranges', kwargs)
-        self.percentInSubranges = self.get_value('percentInSubranges', kwargs)
+        self.used = self.get_value('used', **kwargs)
+        self.free = self.get_value('free', **kwargs)
+        self.numInSubranges = self.get_value('numInSubranges', **kwargs)
+        self.percentInSubranges = self.get_value('percentInSubranges', **kwargs)
 
 
 class Interface(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', kwargs)
-        self.name = self.get_value('name', kwargs)
-        self.clientIdentifier = self.get_value('clientIdentifier', kwargs)
-        self.addresses = self.get_value('addresses', kwargs)
-        self.customProperties = self.get_value('customProperties', kwargs)
-        self.deviceRef = self.get_value('deviceRef', kwargs)
+        self.ref = self.get_value('ref', **kwargs)
+        self.name = self.get_value('name', **kwargs)
+        self.clientIdentifier = self.get_value('clientIdentifier', **kwargs)
+        self.addresses = self.get_value('addresses', **kwargs)
+        self.customProperties = self.get_value('customProperties', **kwargs)
+        self.deviceRef = self.get_value('deviceRef', **kwargs)
 
 
 class Device(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', kwargs)
-        self.name = self.get_value('name', kwargs)
-        self.customProperties = self.get_value('customProperties', kwargs)
-        self.interfaces = self.get_value('interfaces', kwargs)
+        self.ref = self.get_value('ref', **kwargs)
+        self.name = self.get_value('name', **kwargs)
+        self.customProperties = self.get_value('customProperties', **kwargs)
+        self.interfaces = self.get_value('interfaces', **kwargs)
 
 
 class ChangeRequest(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', kwargs)
-        self.requester = self.get_value('requester', kwargs)
-        self.state = self.get_value('state', kwargs)
-        self.creationDate = self.get_value('creationDate', kwargs)
-        self.objType = self.get_value('objType', kwargs)
-        self.requestDate = self.get_value('requestDate', kwargs)
-        self.customProperties = self.get_value('customProperties', kwargs)
-        self.saveComment = self.get_value('saveComment', kwargs)
-        self.processedDate = self.get_value('processedDate', kwargs)
-        self.dnsZoneChanges = self.get_value('dnsZoneChanges', kwargs)
-        self.dnsRecordChanges = self.get_value('dnsRecordChanges', kwargs)
-        self.dhcpScopeChanges = self.get_value('dhcpScopeChanges', kwargs)
-        self.dhcpReservationChanges = self.get_value('dhcpReservationChanges', kwargs)
-        self.dhcpExclusionChanges = self.get_value('dhcpExclusionChanges', kwargs)
-        self.dhcpAddressPoolChanges = self.get_value('dhcpAddressPoolChanges', kwargs)
-        self.dhcpOptionChanges = self.get_value('dhcpOptionChanges', kwargs)
-        self.customPropertyChanges = self.get_value('customPropertyChanges', kwargs)
+        self.ref = self.get_value('ref', **kwargs)
+        self.requester = self.get_value('requester', **kwargs)
+        self.state = self.get_value('state', **kwargs)
+        self.creationDate = self.get_value('creationDate', **kwargs)
+        self.objType = self.get_value('objType', **kwargs)
+        self.requestDate = self.get_value('requestDate', **kwargs)
+        self.customProperties = self.get_value('customProperties', **kwargs)
+        self.saveComment = self.get_value('saveComment', **kwargs)
+        self.processedDate = self.get_value('processedDate', **kwargs)
+        self.dnsZoneChanges = self.get_value('dnsZoneChanges', **kwargs)
+        self.dnsRecordChanges = self.get_value('dnsRecordChanges', **kwargs)
+        self.dhcpScopeChanges = self.get_value('dhcpScopeChanges', **kwargs)
+        self.dhcpReservationChanges = self.get_value('dhcpReservationChanges', **kwargs)
+        self.dhcpExclusionChanges = self.get_value('dhcpExclusionChanges', **kwargs)
+        self.dhcpAddressPoolChanges = self.get_value('dhcpAddressPoolChanges', **kwargs)
+        self.dhcpOptionChanges = self.get_value('dhcpOptionChanges', **kwargs)
+        self.customPropertyChanges = self.get_value('customPropertyChanges', **kwargs)
 
 
 class Folder(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', kwargs)
-        self.name = self.get_value('name', kwargs)
-        self.contentType = self.get_value('contentType', kwargs)
-        self.parentRef = self.get_value('parentRef', kwargs)
+        self.ref = self.get_value('ref', **kwargs)
+        self.name = self.get_value('name', **kwargs)
+        self.contentType = self.get_value('contentType', **kwargs)
+        self.parentRef = self.get_value('parentRef', **kwargs)
 
 
-class IPAMRecords(BaseObject):
+class IPAMRecords(BaseService):
     def __init__(self, client):
         super(IPAMRecords, self).__init__(client=client,
                                           url_base="IPAMRecords",
@@ -396,7 +396,7 @@ class Folders(BaseService):
             url = "{0}/{1}/{2}".format(self.url_base, ref, self.url_base)
         else:
             url = "{0}/{1}/{2}".format(self.url_base, ref, folder_ref)
-        return self.client.deleteItem(url, kwargs)
+        return self.client.deleteItem(url, **kwargs)
 
     def addToFolder(self, ref, folder_ref, saveComment=""):
         payload = {

@@ -6,34 +6,34 @@ from menandmice.base import BaseService
 
 class Role(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', kwargs)
-        self.name = self.get_value('name', kwargs)
-        self.description = self.get_value('description', kwargs)
-        self.users = self.build_obj_list(Group, self.get_value('users', kwargs))
-        self.groups = self.build_obj_list(User, self.get_value('groups', kwargs))
+        self.ref = self.get_value('ref', **kwargs)
+        self.name = self.get_value('name', **kwargs)
+        self.description = self.get_value('description', **kwargs)
+        self.users = self.build_obj_list(Group, self.get_value('users', **kwargs))
+        self.groups = self.build_obj_list(User, self.get_value('groups', **kwargs))
 
 
 class User(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', kwargs)
-        self.name = self.get_value('name', kwargs)
-        self.password = self.get_value('password', kwargs)
-        self.fullName = self.get_value('fullName', kwargs)
-        self.description = self.get_value('description', kwargs)
-        self.email = self.get_value('email', kwargs)
-        self.authenticationType = self.get_value('authenticationType', kwargs)
-        self.roles = self.build_obj_list(Role, self.get_value('roles', kwargs))
-        self.groups = self.build_obj_list(Group, self.get_value('groups', kwargs))
+        self.ref = self.get_value('ref', **kwargs)
+        self.name = self.get_value('name', **kwargs)
+        self.password = self.get_value('password', **kwargs)
+        self.fullName = self.get_value('fullName', **kwargs)
+        self.description = self.get_value('description', **kwargs)
+        self.email = self.get_value('email', **kwargs)
+        self.authenticationType = self.get_value('authenticationType', **kwargs)
+        self.roles = self.build_obj_list(Role, self.get_value('roles', **kwargs))
+        self.groups = self.build_obj_list(Group, self.get_value('groups', **kwargs))
 
 
 class Group(BaseObject):
     def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', kwargs)
-        self.name = self.get_value('name', kwargs)
-        self.description = self.get_value('description', kwargs)
-        self.adIntegrated = self.get_value('adIntegrated', kwargs)
-        self.groupMembers = self.build_obj_list(User, self.get_value('groupMembers', kwargs))
-        self.roles = self.build_obj_list(Role, self.get_value('roles', kwargs))
+        self.ref = self.get_value('ref', **kwargs)
+        self.name = self.get_value('name', **kwargs)
+        self.description = self.get_value('description', **kwargs)
+        self.adIntegrated = self.get_value('adIntegrated', **kwargs)
+        self.groupMembers = self.build_obj_list(User, self.get_value('groupMembers', **kwargs))
+        self.roles = self.build_obj_list(Role, self.get_value('roles', **kwargs))
 
 
 class Groups(BaseService):
@@ -61,13 +61,7 @@ class Groups(BaseService):
 
     def getGroupRoles(self, group_ref, **kwargs):
         all_roles = []
-        query_string = ""
-        if kwargs:
-            for key, value in kwargs.items():
-                if not query_string:
-                    query_string += "?{0}={1}".format(key, value)
-                else:
-                    query_string += "&{0}={1}".format(key, value)
+        query_string = self.make_query_str(**kwargs)
         role_response = self.client.get(
             "{0}{1}/Roles{2}".format(self.client.baseurl, group_ref, query_string))
         for role in role_response['result']['roles']:
@@ -94,13 +88,7 @@ class Groups(BaseService):
 
     def getUserRoles(self, group_ref, **kwargs):
         all_users = []
-        query_string = ""
-        if kwargs:
-            for key, value in kwargs.items():
-                if not query_string:
-                    query_string += "?{0}={1}".format(key, value)
-                else:
-                    query_string += "&{0}={1}".format(key, value)
+        query_string = self.make_query_str(**kwargs)
         role_response = self.client.get(
             "{0}{1}/Users{2}".format(self.client.baseurl, group_ref, query_string))
         for user in role_response['result']['users']:

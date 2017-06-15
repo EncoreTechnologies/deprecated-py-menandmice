@@ -7,7 +7,14 @@ CI_REPO_BRANCH ?= master
 all: .DEFAULT
 
 .PHONY: clean
-clean: clean-ci-repo
+clean: clean-pyc clean-ci-repo
+
+.PHONY: clean-pyc
+clean-pyc:
+	@echo
+	@echo "==================== clean-pyc ===================="
+	@echo
+	find . -name 'ci' -prune -or -name '.git' -or -type f -name "*.pyc" | xargs rm
 
 # Clone the ci-repo into the ci/ directory
 .PHONY: clone-ci-repo

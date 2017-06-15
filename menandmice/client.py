@@ -1,7 +1,7 @@
 import requests
 import json
 
-from menandmice.Base import BaseObject
+from menandmice.base import BaseObject
 
 from menandmice.dns import DNSGenerateDirective
 from menandmice.dns import DNSRecords

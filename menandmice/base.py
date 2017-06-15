@@ -75,7 +75,7 @@ class BaseService(BaseObject):
         return entities
 
     def delete(self, ref, **kwargs):
-        return self.client.deleteItem(ref, kwargs)
+        return self.client.deleteItem(ref, **kwargs)
 
     def update(self,
                ref,
