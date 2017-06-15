@@ -47,18 +47,9 @@ class IdentityAccess(BaseObject):
     def __init__(self, **kwargs):
         self.identityRef = self.get_value('identityRef', **kwargs)
         self.identityName = self.get_value('identityName', **kwargs)
-        self.accessEntries = self.buildAccessEntries(
-            self.get_value('accessEntries', **kwargs))
-
-    def buildAccessEntries(self, accessEntries):
-        all_accessEntries = []
-        if accessEntries:
-            if isinstance(accessEntries, list):
-                for entry in accessEntries:
-                    all_accessEntries.append(AccessEntry(**entry))
-            else:
-                all_accessEntries.append(AccessEntry(**accessEntries))
-        return all_accessEntries
+        self.accessEntries = self.build_obj_list(AccessEntry,
+                                                 self.get_value('accessEntries',
+                                                                **kwargs))
 
 
 class AccessEntry(BaseObject):
