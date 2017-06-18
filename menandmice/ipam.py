@@ -1,123 +1,130 @@
-import json
-
 from menandmice.base import BaseObject
 from menandmice.base import BaseService
 
 
 class IPAMRecord(BaseObject):
-    def __init__(self, **kwargs):
-        self.addrRef = self.get_value('addrRef', **kwargs)
-        self.address = self.get_value('address', **kwargs)
-        self.claimed = self.get_value('claimed', **kwargs)
-        self.dnsHosts = self.get_value('dnsHosts', **kwargs)
-        self.dhcpReservations = self.get_value('dhcpReservations', **kwargs)
-        self.dhcpLeases = self.get_value('dhcpLeases', **kwargs)
-        self.discoveryType = self.get_value('discoveryType', **kwargs)
-        self.lastSeenDate = self.get_value('lastSeenDate', **kwargs)
-        self.lastDiscoveryDate = self.get_value('lastDiscoveryDate', **kwargs)
-        self.lastKnownClientIdentifier = self.get_value('lastKnownClientIdentifier', **kwargs)
-        self.device = self.get_value('device', **kwargs)
-        self.interface = self.get_value('interface', **kwargs)
-        self.ptrStatus = self.get_value('ptrStatus', **kwargs)
-        self.extraneousPTR = self.get_value('extraneousPTR', **kwargs)
-        self.customProperties = self.get_value('customProperties', **kwargs)
-        self.state = self.get_value('state', **kwargs)
-        self.usage = self.get_value('usage', **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(IPAMRecord, self).__init__(*args, **kwargs)
+        self.add_key('addrRef')
+        self.add_key('address')
+        self.add_key('claimed')
+        self.add_key('dnsHosts')
+        self.add_key('dhcpReservations')
+        self.add_key('dhcpLeases')
+        self.add_key('discoveryType')
+        self.add_key('lastSeenDate')
+        self.add_key('lastDiscoveryDate')
+        self.add_key('lastKnownClientIdentifier')
+        self.add_key('device')
+        self.add_key('interface')
+        self.add_key('ptrStatus')
+        self.add_key('extraneousPTR')
+        self.add_key('customProperties')
+        self.add_key('state')
+        self.add_key('usage')
 
 
 class Range(BaseObject):
-    def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', **kwargs)
-        self.name = self.get_value('name', **kwargs)
-        self.from_ = self.get_value('from', **kwargs)
-        self.to = self.get_value('to', **kwargs)
-        self.parentRef = self.get_value('parentRef', **kwargs)
-        self.adSiteRef = self.get_value('adSiteRef', **kwargs)
-        self.childRanges = self.get_value('childRanges', **kwargs)
-        self.dhcpScopes = self.get_value('dhcpScopes', **kwargs)
-        self.subnet = self.get_value('subnet', **kwargs)
-        self.locked = self.get_value('locked', **kwargs)
-        self.autoAssign = self.get_value('autoAssign', **kwargs)
-        self.hasSchedule = self.get_value('hasSchedule', **kwargs)
-        self.hasMonitor = self.get_value('hasMonitor', **kwargs)
-        self.customProperties = self.get_value('customProperties', **kwargs)
-        self.inheritAccess = self.get_value('inheritAccess', **kwargs)
-        self.isContainer = self.get_value('isContainer', **kwargs)
-        self.utilizationPercentage = self.get_value('utilizationPercentage', **kwargs)
-        self.hasRogueAddresses = self.get_value('hasRogueAddresses', **kwargs)
-        self.cloudNetworkRef = self.get_value('cloudNetworkRef', **kwargs)
-        self.cloudAllocationPools = self.get_value('cloudAllocationPools', **kwargs)
-        self.discoveredProperties = self.get_value('discoveredProperties', **kwargs)
-        self.creationTime = self.get_value('creationTime', **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Range, self).__init__(*args, **kwargs)
+        self.add_key('ref')
+        self.add_key('name')
+        self.add_key('from')
+        self.add_key('to')
+        self.add_key('parentRef')
+        self.add_key('adSiteRef')
+        self.add_key('childRanges')
+        self.add_key('dhcpScopes')
+        self.add_key('subnet')
+        self.add_key('locked')
+        self.add_key('autoAssign')
+        self.add_key('hasSchedule')
+        self.add_key('hasMonitor')
+        self.add_key('customProperties')
+        self.add_key('inheritAccess')
+        self.add_key('isContainer')
+        self.add_key('utilizationPercentage')
+        self.add_key('hasRogueAddresses')
+        self.add_key('cloudNetworkRef')
+        self.add_key('cloudAllocationPools')
+        self.add_key('discoveredProperties')
+        self.add_key('creationTime')
 
 
 class Discovery(BaseObject):
-    def __init__(self, **kwargs):
-        self.interval = self.get_value('interval', **kwargs)
-        self.unit = self.get_value('unit', **kwargs)
-        self.enabled = self.get_value('enabled', **kwargs)
-        self.startTime = self.get_value('startTime', **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Discovery, self).__init__(*args, **kwargs)
+        self.add_key('interval')
+        self.add_key('unit')
+        self.add_key('enabled')
+        self.add_key('startTime')
 
 
 class AddressBlock(BaseObject):
-    def __init__(self, **kwargs):
-        self.from_ = self.get_value('from', **kwargs)
-        self.to = self.get_value('to', **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(AddressBlock, self).__init__(*args, **kwargs)
+        self.add_key('from')
+        self.add_key('to')
 
 
 class GetRangeStatisticsResponse(BaseObject):
-    def __init__(self, **kwargs):
-        self.used = self.get_value('used', **kwargs)
-        self.free = self.get_value('free', **kwargs)
-        self.numInSubranges = self.get_value('numInSubranges', **kwargs)
-        self.percentInSubranges = self.get_value('percentInSubranges', **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(GetRangeStatisticsResponse, self).__init__(*args, **kwargs)
+        self.add_key('used')
+        self.add_key('free')
+        self.add_key('numInSubranges')
+        self.add_key('percentInSubranges')
 
 
 class Interface(BaseObject):
-    def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', **kwargs)
-        self.name = self.get_value('name', **kwargs)
-        self.clientIdentifier = self.get_value('clientIdentifier', **kwargs)
-        self.addresses = self.get_value('addresses', **kwargs)
-        self.customProperties = self.get_value('customProperties', **kwargs)
-        self.deviceRef = self.get_value('deviceRef', **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Interface, self).__init__(*args, **kwargs)
+        self.add_key('ref')
+        self.add_key('name')
+        self.add_key('clientIdentifier')
+        self.add_key('addresses')
+        self.add_key('customProperties')
+        self.add_key('deviceRef')
 
 
 class Device(BaseObject):
-    def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', **kwargs)
-        self.name = self.get_value('name', **kwargs)
-        self.customProperties = self.get_value('customProperties', **kwargs)
-        self.interfaces = self.get_value('interfaces', **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Device, self).__init__(*args, **kwargs)
+        self.add_key('ref')
+        self.add_key('name')
+        self.add_key('customProperties')
+        self.add_key('interfaces')
 
 
 class ChangeRequest(BaseObject):
-    def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', **kwargs)
-        self.requester = self.get_value('requester', **kwargs)
-        self.state = self.get_value('state', **kwargs)
-        self.creationDate = self.get_value('creationDate', **kwargs)
-        self.objType = self.get_value('objType', **kwargs)
-        self.requestDate = self.get_value('requestDate', **kwargs)
-        self.customProperties = self.get_value('customProperties', **kwargs)
-        self.saveComment = self.get_value('saveComment', **kwargs)
-        self.processedDate = self.get_value('processedDate', **kwargs)
-        self.dnsZoneChanges = self.get_value('dnsZoneChanges', **kwargs)
-        self.dnsRecordChanges = self.get_value('dnsRecordChanges', **kwargs)
-        self.dhcpScopeChanges = self.get_value('dhcpScopeChanges', **kwargs)
-        self.dhcpReservationChanges = self.get_value('dhcpReservationChanges', **kwargs)
-        self.dhcpExclusionChanges = self.get_value('dhcpExclusionChanges', **kwargs)
-        self.dhcpAddressPoolChanges = self.get_value('dhcpAddressPoolChanges', **kwargs)
-        self.dhcpOptionChanges = self.get_value('dhcpOptionChanges', **kwargs)
-        self.customPropertyChanges = self.get_value('customPropertyChanges', **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(ChangeRequest, self).__init__(*args, **kwargs)
+        self.add_key('ref')
+        self.add_key('requester')
+        self.add_key('state')
+        self.add_key('creationDate')
+        self.add_key('objType')
+        self.add_key('requestDate')
+        self.add_key('customProperties')
+        self.add_key('saveComment')
+        self.add_key('processedDate')
+        self.add_key('dnsZoneChanges')
+        self.add_key('dnsRecordChanges')
+        self.add_key('dhcpScopeChanges')
+        self.add_key('dhcpReservationChanges')
+        self.add_key('dhcpExclusionChanges')
+        self.add_key('dhcpAddressPoolChanges')
+        self.add_key('dhcpOptionChanges')
+        self.add_key('customPropertyChanges')
 
 
 class Folder(BaseObject):
-    def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', **kwargs)
-        self.name = self.get_value('name', **kwargs)
-        self.contentType = self.get_value('contentType', **kwargs)
-        self.parentRef = self.get_value('parentRef', **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Folder, self).__init__(*args, **kwargs)
+        self.add_key('ref')
+        self.add_key('name')
+        self.add_key('contentType')
+        self.add_key('parentRef')
 
 
 class IPAMRecords(BaseService):
@@ -127,14 +134,20 @@ class IPAMRecords(BaseService):
                                           entity_class=IPAMRecord,
                                           get_response_entity_key="ipamRecord",
                                           get_response_all_key="ipamRecords",
-                                          get_is_singular=True)
+                                          get_is_singular=True,
+                                          ref_key="addrRef")
 
-    def pingRecord(self, address_ref):
-        return self.client.post("{0}{1}/Ping".format(self.client.baseurl, address_ref), "")
+    def pingRecord(self, ipam_record):
+        addr_ref = self.ref_or_raise(ipam_record, key=self.ref_key)
+        return self.client.post("{0}{1}/Ping".format(self.client.baseurl,
+                                                     addr_ref),
+                                "")
 
-    def getRecordRange(self, address_ref):
-        range_response = self.client.get("{0}{1}/Range".format(self.client.baseurl, address_ref))
-        return Ranges(self.client).build(range_response['result']['range'])
+    def getRecordRange(self, ipam_record):
+        addr_ref = self.ref_or_raise(ipam_record, key=self.ref_key)
+        range_response = self.client.get("{0}{1}/Range".format(self.client.baseurl,
+                                                               addr_ref))
+        return Range(range_response['result']['range'])
 
 
 class Ranges(BaseService):
@@ -145,22 +158,11 @@ class Ranges(BaseService):
                                      get_response_entity_key="range",
                                      get_response_all_key="ranges")
 
-    def buildAddressBlocks(self, json_input):
-        return self.json_to_class(json_input, AddressBlock)
-
-    def buildStatistics(self, json_input):
-        return self.json_to_class(json_input, GetRangeStatisticsResponse)
-
-    def add(self, range_input, discovery="", saveComment=""):
-        if isinstance(range_input, Range):
-            range_input = json.loads(range_input.to_dict())
-        if discovery:
-            if isinstance(discovery, Discovery):
-                discovery = json.loads(discovery.to_dict())
+    def add(self, range_, discovery="", saveComment=""):
         payload = {
             "discovery": discovery,
             "saveComment": saveComment,
-            "range": range_input
+            "range": range_
         }
         range_json = self.client.post("{0}{1}".format(self.client.baseurl,
                                                       self.url_base),
@@ -168,33 +170,45 @@ class Ranges(BaseService):
         range_return = self.get(range_json['result']['ref'])
         return range_return[0]
 
-    def getZoneFolder(self, range_ref, **kwargs):
+    def getZoneFolder(self, range_, **kwargs):
+        range_ref = self.ref_or_raise(range_)
         query_string = self.make_query_str(**kwargs)
         folder_response = self.client.get("{0}{1}/Folders{2}".format(self.client.baseurl,
                                                                      range_ref,
                                                                      query_string))
         return Folders(self.client).get(folder_response['result']['folder'])
 
-    def deleteZoneFromFolder(self, range_ref, folder_ref="", **kwargs):
+    def deleteZoneFromFolder(self, range_, folder="", **kwargs):
+        range_ref = self.ref_or_raise(range_)
+        folder_ref = self.ref_or_raise(folder)
         query_string = self.make_query_str(**kwargs)
         if folder_ref:
-            url = "{0}{1}/{2}{3}".format(self.client.baseurl, range_ref, folder_ref, query_string)
+            url = "{0}{1}/{2}{3}".format(self.client.baseurl,
+                                         range_ref,
+                                         folder_ref,
+                                         query_string)
         else:
-            url = "{0}{1}/Folders{2}".format(self.client.baseurl, range_ref, query_string)
+            url = "{0}{1}/Folders{2}".format(self.client.baseurl,
+                                             range_ref,
+                                             query_string)
         return self.client.delete(url)
 
-    def addZoneToFolder(self, range_ref, folder_ref, saveComment=""):
+    def addZoneToFolder(self, range_, folder, saveComment=""):
+        range_ref = self.ref_or_raise(range_)
+        folder_ref = self.ref_or_raise(folder)
         return Folders(self.client).addToFolder(range_ref, folder_ref, saveComment)
 
-    def getAddressBlocks(self, range_ref):
+    def getAddressBlocks(self, range_):
+        range_ref = self.ref_or_raise(range_)
         all_blocks = []
         range_response = self.client.get("{0}{1}/AddressBlocks".format(self.client.baseurl,
                                                                        range_ref))
         for block in range_response['result']['addressBlocks']:
-            all_blocks.append(self.buildAddressBlocks(block))
+            all_blocks.append(AddressBlock(block))
         return all_blocks
 
-    def getAvailableAddressBlocks(self, range_ref, **kwargs):
+    def getAvailableAddressBlocks(self, range_, **kwargs):
+        range_ref = self.ref_or_raise(range_)
         all_blocks = []
         query_string = self.make_query_str(**kwargs)
         range_response = self.client.get(
@@ -202,26 +216,29 @@ class Ranges(BaseService):
                                                       range_ref,
                                                       query_string))
         for block in range_response['result']['addressBlocks']:
-            all_blocks.append(self.buildAddressBlocks(block))
+            all_blocks.append(AddressBlock(block))
         return all_blocks
 
-    def getInheritAccess(self, range_ref):
+    def getInheritAccess(self, range_):
+        range_ref = self.ref_or_raise(range_)
         inherit_access_response = self.client.get(
             "{0}{1}/InheritAccess".format(self.client.baseurl,
                                           range_ref))
         return inherit_access_response['result']['inheritAccess']
 
-    def getIpamRecords(self, range_ref, **kwargs):
+    def getIpamRecords(self, range_, **kwargs):
+        range_ref = self.ref_or_raise(range_)
         all_records = []
         query_string = self.make_query_str(**kwargs)
         record_response = self.client.get("{0}{1}/IPAMRecords{2}".format(self.client.baseurl,
                                                                          range_ref,
                                                                          query_string))
         for record in record_response['result']['ipamRecords']:
-            all_records.append(IPAMRecords(self.client).build(record))
+            all_records.append(IPAMRecord(record))
         return all_records
 
-    def getNextFreeAddress(self, range_ref, **kwargs):
+    def getNextFreeAddress(self, range_, **kwargs):
+        range_ref = self.ref_or_raise(range_)
         query_string = ""
         query_string = self.make_query_str(**kwargs)
         address_response = self.client.get(
@@ -230,20 +247,22 @@ class Ranges(BaseService):
                                                query_string))
         return address_response['result']['address']
 
-    def getStatistics(self, range_ref):
+    def getStatistics(self, range_):
+        range_ref = self.ref_or_raise(range_)
         statistics_response = self.client.get(
             "{0}{1}/Statistics".format(self.client.baseurl, range_ref))
-        return self.buildStatistics(statistics_response['result'])
+        return GetRangeStatisticsResponse(statistics_response['result'])
 
-    def getSubranges(self, range_ref, **kwargs):
+    def getSubranges(self, range_, **kwargs):
+        range_ref = self.ref_or_raise(range_)
         all_ranges = []
         query_string = self.make_query_str(**kwargs)
         range_response = self.client.get(
             "{0}{1}/Subranges{2}".format(self.client.baseurl,
                                          range_ref,
                                          query_string))
-        for range in range_response['result']['ranges']:
-            all_ranges.append(self.build(range))
+        for range_ in range_response['result']['ranges']:
+            all_ranges.append(Range(range_))
         return all_ranges
 
 
@@ -255,12 +274,10 @@ class Interfaces(BaseService):
                                          get_response_entity_key="interface",
                                          get_response_all_key="interfaces")
 
-    def add(self, interface_input, saveComment=""):
-        if isinstance(interface_input, Interface):
-            interface_input = json.loads(interface_input.to_dict())
+    def add(self, interface, saveComment=""):
         payload = {
             "saveComment": saveComment,
-            "interface": interface_input
+            "interface": interface
         }
         interface_json = self.client.post("{0}{1}".format(self.client.baseurl,
                                                           self.url_base),
@@ -279,12 +296,10 @@ class Devices(BaseService):
                                       get_response_entity_key="device",
                                       get_response_all_key="devices")
 
-    def add(self, device_input, saveComment=""):
-        if isinstance(device_input, Device):
-            device_input = json.loads(device_input.to_dict())
+    def add(self, device, saveComment=""):
         payload = {
             "saveComment": saveComment,
-            "device": device_input
+            "device": device
         }
         device_json = self.client.post("{0}{1}".format(self.client.baseurl,
                                                        self.url_base),
@@ -362,12 +377,10 @@ class Folders(BaseService):
                                       get_response_entity_key="folder",
                                       get_response_all_key="folders")
 
-    def add(self, folder_input, saveComment=""):
-        if isinstance(folder_input, Folder):
-            folder_input = json.loads(folder_input.to_dict())
+    def add(self, folder, saveComment=""):
         payload = {
             "saveComment": saveComment,
-            "folder": folder_input
+            "folder": folder
         }
         folder_json = self.client.post("{0}{1}".format(self.client.baseurl,
                                                        self.url_base),
@@ -390,7 +403,8 @@ class Folders(BaseService):
             return_val = self.getFolder(folder_response['result']['folder'])
         return return_val
 
-    def deleteObjectFolder(self, ref, folder_ref="", **kwargs):
+    def deleteObjectFolder(self, ref, folder="", **kwargs):
+        folder_ref = self.ref_or_raise(folder)
         url = ""
         if not folder_ref:
             url = "{0}/{1}/{2}".format(self.url_base, ref, self.url_base)
@@ -398,7 +412,8 @@ class Folders(BaseService):
             url = "{0}/{1}/{2}".format(self.url_base, ref, folder_ref)
         return self.client.deleteItem(url, **kwargs)
 
-    def addToFolder(self, ref, folder_ref, saveComment=""):
+    def addToFolder(self, ref, folder, saveComment=""):
+        folder_ref = self.ref_or_raise(folder)
         payload = {
             "saveComment": saveComment
         }
@@ -408,8 +423,10 @@ class Folders(BaseService):
                                payload,
                                True)
 
-    def getAllObjects(self, folder_ref):
-        object_json = self.client.get("{0}{1}/Objects".format(self.client.baseurl, folder_ref))
+    def getAllObjects(self, folder):
+        folder_ref = self.ref_or_raise(folder)
+        object_json = self.client.get("{0}{1}/Objects".format(self.client.baseurl,
+                                                              folder_ref))
         all_objects = []
         for o in object_json['result']['objects']:
             all_objects.append(getattr(self.client, o['objType']).get(o['ref'])[0])

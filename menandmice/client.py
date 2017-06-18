@@ -1,9 +1,11 @@
 import requests
+import pprint
 import json
 
 from menandmice.base import BaseObject
 
 from menandmice.dns import DNSGenerateDirective
+from menandmice.dns import DNSRecord
 from menandmice.dns import DNSRecords
 from menandmice.dns import DNSView
 from menandmice.dns import DNSViews
@@ -35,52 +37,54 @@ from menandmice.users import User
 from menandmice.users import Users
 
 
-class ObjectAccess(BaseObject):
-    def __init__(self, **kwargs):
-        self.ref = self.get_value('ref', **kwargs)
-        self.name = self.get_value('name', **kwargs)
-        self.identityAccess = self.build_obj_list(IdentityAccess,
-                                                  self.get_value('identityAccess', **kwargs))
+class AccessEntry(BaseObject):
+    def __init__(self, *args, **kwargs):
+        super(AccessEntry, self).__init__(*args, **kwargs)
+        self.add_key('name')
+        self.add_key('access')
 
 
 class IdentityAccess(BaseObject):
-    def __init__(self, **kwargs):
-        self.identityRef = self.get_value('identityRef', **kwargs)
-        self.identityName = self.get_value('identityName', **kwargs)
-        self.accessEntries = self.build_obj_list(AccessEntry,
-                                                 self.get_value('accessEntries',
-                                                                **kwargs))
+    def __init__(self, *args, **kwargs):
+        super(IdentityAccess, self).__init__(*args, **kwargs)
+        self.add_key('identityRef')
+        self.add_key('identityName')
+        self.add_key('accessEntries', [AccessEntry()])
 
 
-class AccessEntry(BaseObject):
-    def __init__(self, **kwargs):
-        self.name = self.get_value('name', **kwargs)
-        self.access = self.get_value('access', **kwargs)
+class ObjectAccess(BaseObject):
+    def __init__(self, *args, **kwargs):
+        super(ObjectAccess, self).__init__(*args, **kwargs)
+        self.add_key('ref')
+        self.add_key('name')
+        self.add_key('identityAccess', [IdentityAccess()])
 
 
 class Event(BaseObject):
-    def __init__(self, **kwargs):
-        self.eventType = self.get_value('eventType', **kwargs)
-        self.objType = self.get_value('objType', **kwargs)
-        self.objRef = self.get_value('objRef', **kwargs)
-        self.objName = self.get_value('objName', **kwargs)
-        self.timestamp = self.get_value('timestamp', **kwargs)
-        self.username = self.get_value('username', **kwargs)
-        self.saveComment = self.get_value('saveComment', **kwargs)
-        self.eventText = self.get_value('eventText', **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Event, self).__init__(*args, **kwargs)
+        self.add_key('eventType')
+        self.add_key('objType')
+        self.add_key('objRef')
+        self.add_key('objName')
+        self.add_key('timestamp')
+        self.add_key('username')
+        self.add_key('saveComment')
+        self.add_key('eventText')
 
 
 class PropertyDefinition(BaseObject):
-    def __init__(self, **kwargs):
-        self.name = self.get_value('name', **kwargs)
-        self.type = self.get_value('type', **kwargs)
-        self.system = self.get_value('system', **kwargs)
-        self.mandatory = self.get_value('mandatory', **kwargs)
-        self.readOnly = self.get_value('readOnly', **kwargs)
-        self.multiLine = self.get_value('multiLine', **kwargs)
-        self.defaultValue = self.get_value('defaultValue', **kwargs)
-        self.listItems = self.get_value('listItems', **kwargs)
-        self.parentProperty = self.get_value('parentProperty', **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(PropertyDefinition, self).__init__(*args, **kwargs)
+        self.add_key('name')
+        self.add_key('type')
+        self.add_key('system')
+        self.add_key('mandatory')
+        self.add_key('readOnly')
+        self.add_key('multiLine')
+        self.add_key('defaultValue')
+        self.add_key('listItems')
+        self.add_key('parentProperty')
 
 
 class Client(BaseObject):
@@ -105,7 +109,7 @@ class Client(BaseObject):
         return DNSZone(**kwargs)
 
     def newDnsRecord(self, **kwargs):
-        return DNSRecords(**kwargs)
+        return DNSRecord(**kwargs)
 
     def newDnsView(self, **kwargs):
         return DNSView(**kwargs)
@@ -204,7 +208,9 @@ class Client(BaseObject):
         print("POST " + url)
         sanitized_payload = self.sanitize_json(payload)
         print(sanitized_payload)
+        print(json.dumps(sanitized_payload))
         response = self.session.post(url, json=sanitized_payload)
+        print(response.status_code)
         if response.status_code != 201:
             error_json = response.json()
             if error_json:
@@ -220,6 +226,7 @@ class Client(BaseObject):
         print("DELETE " + url)
         response = self.session.delete(url)
         return_status = ""
+        print(response.status_code)
         if response.status_code == 204:
             return_status = "Successfully removed!"
         else:
@@ -240,6 +247,7 @@ class Client(BaseObject):
         print(payload)
         response = self.session.put(url, json=payload)
         return_status = ""
+        print(response.status_code)
         if response.status_code == 204:
             return_status = "Successfully updated!"
         else:
@@ -254,8 +262,10 @@ class Client(BaseObject):
         return return_status
 
     def deleteItem(self, ref, **kwargs):
+        print("Delete item  " + ref)
         query_string = self.make_query_str(**kwargs)
-        return self.delete("{0}{1}{2}".format(self.baseurl, ref, query_string))
+        response = self.delete("{0}{1}{2}".format(self.baseurl, ref, query_string))
+        return response
 
     def updateItem(self, ref, properties, objType, saveComment, deleteUnspecified):
         if not isinstance(properties, list):
@@ -267,38 +277,19 @@ class Client(BaseObject):
             "deleteUnspecified": deleteUnspecified,
             "properties": properties
         }
-        return self.put("{0}{1}".format(self.baseurl, ref), payload)
-
-    def buildAccess(self, json_input):
-        return self.json_to_class(json_input, ObjectAccess)
+        response = self.put("{0}{1}".format(self.baseurl, ref), payload)
+        return response
 
     def getItemAccess(self, ref, **kwargs):
         query_string = self.make_query_str(**kwargs)
         access_response_json = self.get(
             "{0}{1}/Access{2}".format(self.baseurl, ref, query_string))
-        print access_response_json['result']
-        access_object = self.buildAccess(
-            access_response_json['result']['objectAccess'])
+        pprint.pprint(access_response_json['result'])
+        access_object = ObjectAccess(access_response_json['result']['objectAccess'])
         return access_object
 
     def setItemAccess(self, ref, identity_access, object_type, saveComment):
-        if isinstance(identity_access, ObjectAccess):
-            print "converting to identity access: " + json.dumps(identity_access.to_dict())
-            identity_access = identity_access.identityAccess
-            print type(identity_access)
-        if isinstance(identity_access, IdentityAccess):
-            print "converting to json"
-            identity_access = json.loads(identity_access.to_dict())
-        if isinstance(identity_access, list):
-            print "converting to list json"
-            json_access_list = []
-            for access in identity_access:
-                if isinstance(access, IdentityAccess):
-                    json_access_list.append(access.to_dict())
-                else:  # assume it's json
-                    json_access_list.append(access)
-            identity_access = json_access_list
-        else:
+        if not isinstance(identity_access, list):
             identity_access = [identity_access]
         payload = {
             "objType": object_type,
@@ -308,20 +299,14 @@ class Client(BaseObject):
         print(payload)
         return self.put("{0}{1}/Access".format(self.baseurl, ref), payload)
 
-    def buildEvent(self, json_input):
-        return self.json_to_class(json_input, Event)
-
     def getItemHistory(self, ref, **kwargs):
         query_string = self.make_query_str(**kwargs)
         history_response_json = self.get(
             "{0}{1}/History{2}".format(self.baseurl, ref, query_string))
         all_events = []
         for event in history_response_json['result']['events']:
-            all_events.append(self.buildEvent(event))
+            all_events.append(Event(event))
         return all_events
-
-    def buildDefinition(self, json_input):
-        return self.json_to_class(json_input, PropertyDefinition)
 
     def getPropertyDefinitions(self, ref, property_name):
         url = ""
@@ -333,12 +318,10 @@ class Client(BaseObject):
         property_definitions_json = self.get(url)
         property_definitions = []
         for definition in property_definitions_json['result']['propertyDefinitions']:
-            property_definitions.append(self.buildDefinition(definition))
+            property_definitions.append(PropertyDefinition(definition))
         return property_definitions
 
     def newCustomProperty(self, ref, property_definition, saveComment):
-        if isinstance(property_definition, PropertyDefinition):
-            property_definition = json.loads(property_definition.to_dict())
         url = "{0}{1}/PropertyDefinitions".format(self.baseurl, ref)
         payload = {
             'saveComment': saveComment,
@@ -351,8 +334,6 @@ class Client(BaseObject):
                                   property_definition,
                                   updateExisting,
                                   saveComment):
-        if isinstance(property_definition, PropertyDefinition):
-            property_definition = json.loads(property_definition.to_dict())
         payload = {
             'updateExisting': updateExisting,
             'saveComment': saveComment,

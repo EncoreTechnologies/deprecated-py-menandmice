@@ -1,34 +1,18 @@
 import json
+import pprint
 
 
-class BaseObject(object):
+class BaseObject(dict):
 
-    def get_value(self, key, **kwargs):
-        return kwargs[key] if (key in kwargs) else None
-
-    def build_obj(self, clazz, **kwargs):
-        return clazz(**kwargs) if kwargs else None
-
-    def build_obj_list(self, clazz, objects, **kwargs):
-        obj_list = []
-        if objects:
-            if isinstance(objects, list):
-                for obj in objects:
-                    obj_list.append(clazz(**obj))
-            else:
-                obj_list.append(clazz(**objects))
-        return obj_list
+    def add_key(self, key, default=None):
+        if key not in self:
+            self[key] = default
 
     def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
+        return json.dumps(self)
 
-    def to_dict(self):
-        return json.loads(self.to_json())
-
-    def json_to_class(self, json_input, clazz):
-        if isinstance(json_input, basestring):
-            json_input = json.loads(json_input)
-        return clazz(**json_input)
+    def from_json(self, string):
+        return json.loads(string)
 
     def make_query_str(self, **kwargs):
         query_string = ""
@@ -49,75 +33,101 @@ class BaseService(BaseObject):
                  entity_class=None,
                  get_response_entity_key="",
                  get_response_all_key="",
-                 get_is_singular=False):
+                 get_is_singular=False,
+                 ref_key="ref"):
         self.client = client
         self.url_base = url_base
         self.entity_class = entity_class
         self.get_response_entity_key = get_response_entity_key
         self.get_response_all_key = get_response_all_key
         self.get_is_singular = get_is_singular
+        self.ref_key = ref_key
 
     def build(self, json_input):
-        return self.json_to_class(json_input, self.entity_class)
+        if isinstance(json_input, basestring):
+            json_input = json.loads(json_input)
+        return self.entity_class(**json_input)
 
-    def get(self, ref="", **kwargs):
+    def get(self, obj_or_ref="", **kwargs):
+        ref = self.ref_or_raise(obj_or_ref, self.ref_key)
         entities = []
         query_string = self.make_query_str(**kwargs)
         if self.get_is_singular or ref:
-            entity_response = self.client.get("{0}{1}{2}".format(self.client.baseurl,
-                                                                 ref,
-                                                                 query_string))
-            entities.append(self.build(entity_response['result'][self.get_response_entity_key]))
+            response = self.client.get("{0}{1}{2}".format(self.client.baseurl,
+                                                          ref,
+                                                          query_string))
+            pprint.pprint(response)
+            entities.append(self.build(response['result'][self.get_response_entity_key]))
         else:
-            entity_response = self.client.get(
+            response = self.client.get(
                 "{0}{1}{2}".format(self.client.baseurl,
                                    self.url_base,
                                    query_string))
-            for entity in entity_response['result'][self.get_response_all_key]:
+            pprint.pprint(response)
+            for entity in response['result'][self.get_response_all_key]:
                 entities.append(self.build(entity))
         return entities
 
-    def delete(self, ref, **kwargs):
+    def delete(self, obj_or_ref, **kwargs):
+        ref = self.ref_or_raise(obj_or_ref, self.ref_key)
         return self.client.deleteItem(ref, **kwargs)
 
     def update(self,
-               ref,
+               obj_or_ref,
                properties,
                objType="",
                saveComment="",
                deleteUnspecified=False):
+        ref = self.ref_or_raise(obj_or_ref, self.ref_key)
         return self.client.updateItem(ref,
                                       properties,
                                       objType,
                                       saveComment,
                                       deleteUnspecified)
 
-    def getAccess(self, ref, **kwargs):
+    def getAccess(self, obj_or_ref, **kwargs):
+        ref = self.ref_or_raise(obj_or_ref, self.ref_key)
         return self.client.getItemAccess(ref, **kwargs)
 
-    def setAccess(self, ref, identity_access, object_type="", saveComment=""):
+    def setAccess(self, obj_or_ref, identity_access, object_type="", saveComment=""):
+        ref = self.ref_or_raise(obj_or_ref, self.ref_key)
         return self.client.setItemAccess(ref, identity_access, object_type, saveComment)
 
-    def getHistory(self, ref, **kwargs):
+    def getHistory(self, obj_or_ref, **kwargs):
+        ref = self.ref_or_raise(obj_or_ref, self.ref_key)
         return self.client.getItemHistory(ref, **kwargs)
 
-    def getPropertyDefinition(self, ref, property_name=""):
+    def getPropertyDefinition(self, obj_or_ref, property_name=""):
+        ref = self.ref_or_raise(obj_or_ref, self.ref_key)
         return self.client.getPropertyDefinitions(ref, property_name)
 
-    def addNewPropertyDefinition(self, ref, property_definition, saveComment=""):
+    def addNewPropertyDefinition(self, obj_or_ref, property_definition, saveComment=""):
+        ref = self.ref_or_raise(obj_or_ref, self.ref_key)
         return self.client.newCustomProperty(ref, property_definition, saveComment)
 
     def updatePropertyDefinition(self,
-                                 ref,
+                                 obj_or_ref,
                                  property_name,
                                  property_definition,
                                  updateExisting="",
                                  saveComment=""):
+        ref = self.ref_or_raise(obj_or_ref, self.ref_key)
         return self.client.updatePropertyDefinitions(ref,
                                                      property_name,
                                                      property_definition,
                                                      updateExisting,
                                                      saveComment)
 
-    def deletePropertyDefinition(self, ref, property_name, saveComment=""):
+    def deletePropertyDefinition(self, obj_or_ref, property_name, saveComment=""):
+        ref = self.ref_or_raise(obj_or_ref, self.ref_key)
         return self.client.deletePropertyDefinition(ref, property_name, saveComment)
+
+    def ref_or_raise(self, dict_or_ref, key="ref"):
+        # is the object a string (ref)
+        if isinstance(dict_or_ref, basestring):
+            return dict_or_ref
+        # is the object a dictionary (note, our objects are all dicts)
+        elif isinstance(dict_or_ref, dict):
+            return dict_or_ref[key]
+        else:
+            raise TypeError("Input must be of type basestring or dict")

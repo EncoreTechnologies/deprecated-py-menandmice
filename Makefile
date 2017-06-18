@@ -14,7 +14,7 @@ clean-pyc:
 	@echo
 	@echo "==================== clean-pyc ===================="
 	@echo
-	find . -name 'ci' -prune -or -name '.git' -or -type f -name "*.pyc" | xargs rm
+	find . -name 'ci' -prune -or -name '.git' -or -type f -name "*.pyc" -print | xargs rm
 
 # Clone the ci-repo into the ci/ directory
 .PHONY: clone-ci-repo
