@@ -137,13 +137,13 @@ class IPAMRecords(BaseService):
                                           get_is_singular=True,
                                           ref_key="addrRef")
 
-    def pingRecord(self, ipam_record):
+    def ping_record(self, ipam_record):
         addr_ref = self.ref_or_raise(ipam_record, key=self.ref_key)
         return self.client.post("{0}{1}/Ping".format(self.client.baseurl,
                                                      addr_ref),
                                 "")
 
-    def getRecordRange(self, ipam_record):
+    def get_record_range(self, ipam_record):
         addr_ref = self.ref_or_raise(ipam_record, key=self.ref_key)
         range_response = self.client.get("{0}{1}/Range".format(self.client.baseurl,
                                                                addr_ref))
@@ -158,10 +158,10 @@ class Ranges(BaseService):
                                      get_response_entity_key="range",
                                      get_response_all_key="ranges")
 
-    def add(self, range_, discovery="", saveComment=""):
+    def add(self, range_, discovery="", save_comment=""):
         payload = {
             "discovery": discovery,
-            "saveComment": saveComment,
+            "saveComment": save_comment,
             "range": range_
         }
         range_json = self.client.post("{0}{1}".format(self.client.baseurl,
@@ -170,7 +170,7 @@ class Ranges(BaseService):
         range_return = self.get(range_json['result']['ref'])
         return range_return[0]
 
-    def getZoneFolder(self, range_, **kwargs):
+    def get_range_folder(self, range_, **kwargs):
         range_ref = self.ref_or_raise(range_)
         query_string = self.make_query_str(**kwargs)
         folder_response = self.client.get("{0}{1}/Folders{2}".format(self.client.baseurl,
@@ -178,7 +178,7 @@ class Ranges(BaseService):
                                                                      query_string))
         return Folders(self.client).get(folder_response['result']['folder'])
 
-    def deleteZoneFromFolder(self, range_, folder="", **kwargs):
+    def delete_range_from_folder(self, range_, folder="", **kwargs):
         range_ref = self.ref_or_raise(range_)
         folder_ref = self.ref_or_raise(folder)
         query_string = self.make_query_str(**kwargs)
@@ -193,12 +193,12 @@ class Ranges(BaseService):
                                              query_string)
         return self.client.delete(url)
 
-    def addZoneToFolder(self, range_, folder, saveComment=""):
+    def add_range_to_folder(self, range_, folder, save_comment=""):
         range_ref = self.ref_or_raise(range_)
         folder_ref = self.ref_or_raise(folder)
-        return Folders(self.client).addToFolder(range_ref, folder_ref, saveComment)
+        return Folders(self.client).add_to_folder(range_ref, folder_ref, save_comment)
 
-    def getAddressBlocks(self, range_):
+    def get_address_blocks(self, range_):
         range_ref = self.ref_or_raise(range_)
         all_blocks = []
         range_response = self.client.get("{0}{1}/AddressBlocks".format(self.client.baseurl,
@@ -207,7 +207,7 @@ class Ranges(BaseService):
             all_blocks.append(AddressBlock(block))
         return all_blocks
 
-    def getAvailableAddressBlocks(self, range_, **kwargs):
+    def get_available_address_blocks(self, range_, **kwargs):
         range_ref = self.ref_or_raise(range_)
         all_blocks = []
         query_string = self.make_query_str(**kwargs)
@@ -219,14 +219,14 @@ class Ranges(BaseService):
             all_blocks.append(AddressBlock(block))
         return all_blocks
 
-    def getInheritAccess(self, range_):
+    def get_inherit_access(self, range_):
         range_ref = self.ref_or_raise(range_)
         inherit_access_response = self.client.get(
             "{0}{1}/InheritAccess".format(self.client.baseurl,
                                           range_ref))
         return inherit_access_response['result']['inheritAccess']
 
-    def getIpamRecords(self, range_, **kwargs):
+    def get_ipam_records(self, range_, **kwargs):
         range_ref = self.ref_or_raise(range_)
         all_records = []
         query_string = self.make_query_str(**kwargs)
@@ -237,7 +237,7 @@ class Ranges(BaseService):
             all_records.append(IPAMRecord(record))
         return all_records
 
-    def getNextFreeAddress(self, range_, **kwargs):
+    def get_next_free_address(self, range_, **kwargs):
         range_ref = self.ref_or_raise(range_)
         query_string = ""
         query_string = self.make_query_str(**kwargs)
@@ -247,13 +247,13 @@ class Ranges(BaseService):
                                                query_string))
         return address_response['result']['address']
 
-    def getStatistics(self, range_):
+    def get_statistics(self, range_):
         range_ref = self.ref_or_raise(range_)
         statistics_response = self.client.get(
             "{0}{1}/Statistics".format(self.client.baseurl, range_ref))
         return GetRangeStatisticsResponse(statistics_response['result'])
 
-    def getSubranges(self, range_, **kwargs):
+    def get_subranges(self, range_, **kwargs):
         range_ref = self.ref_or_raise(range_)
         all_ranges = []
         query_string = self.make_query_str(**kwargs)
@@ -274,9 +274,9 @@ class Interfaces(BaseService):
                                          get_response_entity_key="interface",
                                          get_response_all_key="interfaces")
 
-    def add(self, interface, saveComment=""):
+    def add(self, interface, save_comment=""):
         payload = {
-            "saveComment": saveComment,
+            "saveComment": save_comment,
             "interface": interface
         }
         interface_json = self.client.post("{0}{1}".format(self.client.baseurl,
@@ -296,9 +296,9 @@ class Devices(BaseService):
                                       get_response_entity_key="device",
                                       get_response_all_key="devices")
 
-    def add(self, device, saveComment=""):
+    def add(self, device, save_comment=""):
         payload = {
-            "saveComment": saveComment,
+            "saveComment": save_comment,
             "device": device
         }
         device_json = self.client.post("{0}{1}".format(self.client.baseurl,
@@ -318,47 +318,48 @@ class ChangeRequests(BaseService):
                                              get_response_entity_key="changeRequest",
                                              get_response_all_key="changeRequests")
 
-    def add(self, dnsZoneChanges="",
-            dnsRecordChanges="",
-            dhcpScopeChanges="",
-            dhcpReservationChanges="",
-            dhcpExclusionChanges="",
-            dhcpAddressPoolChanges="",
-            dhcpOptionChanges="",
-            customPropertyChanges="",
-            requestDate="",
-            customProperties="",
-            saveComment=""):
-        if not isinstance(dnsZoneChanges, list):
-            dnsZoneChanges = [dnsZoneChanges]
-        if not isinstance(dnsRecordChanges, list):
-            dnsRecordChanges = [dnsRecordChanges]
-        if not isinstance(dhcpScopeChanges, list):
-            dhcpScopeChanges = [dhcpScopeChanges]
-        if not isinstance(dhcpReservationChanges, list):
-            dhcpReservationChanges = [dhcpReservationChanges]
-        if not isinstance(dhcpExclusionChanges, list):
-            dhcpExclusionChanges = [dhcpExclusionChanges]
-        if not isinstance(dhcpAddressPoolChanges, list):
-            dhcpAddressPoolChanges = [dhcpAddressPoolChanges]
-        if not isinstance(dhcpOptionChanges, list):
-            dhcpOptionChanges = [dhcpOptionChanges]
-        if not isinstance(customPropertyChanges, list):
-            customPropertyChanges = [customPropertyChanges]
-        if not isinstance(customProperties, list):
-            customProperties = [customProperties]
+    def add(self,
+            dns_zone_changes="",
+            dns_record_changes="",
+            dhcp_scope_changes="",
+            dhcp_reservation_changes="",
+            dhcp_exclusion_changes="",
+            dhcp_address_pool_changes="",
+            dhcp_option_changes="",
+            custom_property_changes="",
+            request_date="",
+            custom_properties="",
+            save_comment=""):
+        if not isinstance(dns_zone_changes, list):
+            dns_zone_changes = [dns_zone_changes]
+        if not isinstance(dns_record_changes, list):
+            dns_record_changes = [dns_record_changes]
+        if not isinstance(dhcp_scope_changes, list):
+            dhcp_scope_changes = [dhcp_scope_changes]
+        if not isinstance(dhcp_reservation_changes, list):
+            dhcp_reservation_changes = [dhcp_reservation_changes]
+        if not isinstance(dhcp_exclusion_changes, list):
+            dhcp_exclusion_changes = [dhcp_exclusion_changes]
+        if not isinstance(dhcp_address_pool_changes, list):
+            dhcp_address_pool_changes = [dhcp_address_pool_changes]
+        if not isinstance(dhcp_option_changes, list):
+            dhcp_option_changes = [dhcp_option_changes]
+        if not isinstance(custom_property_changes, list):
+            custom_property_changes = [custom_property_changes]
+        if not isinstance(custom_properties, list):
+            custom_properties = [custom_properties]
         payload = {
-            "dnsZoneChanges": dnsZoneChanges,
-            "dnsRecordChanges": dnsRecordChanges,
-            "dhcpScopeChanges": dhcpScopeChanges,
-            "dhcpReservationChanges": dhcpReservationChanges,
-            "dhcpExclusionChanges": dhcpExclusionChanges,
-            "dhcpAddressPoolChanges": dhcpAddressPoolChanges,
-            "dhcpOptionChanges": dhcpOptionChanges,
-            "customPropertyChanges": customPropertyChanges,
-            "requestDate": requestDate,
-            "customProperties": customProperties,
-            "saveComment": saveComment,
+            "dnsZoneChanges": dns_zone_changes,
+            "dnsRecordChanges": dns_record_changes,
+            "dhcpScopeChanges": dhcp_scope_changes,
+            "dhcpReservationChanges": dhcp_reservation_changes,
+            "dhcpExclusionChanges": dhcp_exclusion_changes,
+            "dhcpAddressPoolChanges": dhcp_address_pool_changes,
+            "dhcpOptionChanges": dhcp_option_changes,
+            "customPropertyChanges": custom_property_changes,
+            "requestDate": request_date,
+            "customProperties": custom_properties,
+            "saveComment": save_comment,
         }
         change_json = self.client.post("{0}{1}".format(self.client.baseurl,
                                                        self.url_base),
@@ -377,9 +378,9 @@ class Folders(BaseService):
                                       get_response_entity_key="folder",
                                       get_response_all_key="folders")
 
-    def add(self, folder, saveComment=""):
+    def add(self, folder, save_comment=""):
         payload = {
-            "saveComment": saveComment,
+            "saveComment": save_comment,
             "folder": folder
         }
         folder_json = self.client.post("{0}{1}".format(self.client.baseurl,
@@ -388,7 +389,7 @@ class Folders(BaseService):
         folder_return = self.get(folder_json['result']['ref'])
         return folder_return[0]
 
-    def getObjectFolder(self, ref, **kwargs):
+    def get_object_folder(self, ref, **kwargs):
         query_string = self.make_query_str(**kwargs)
         url = "{0}{1}/{2}/{3}{4}".format(self.client.baseurl,
                                          self.url_base,
@@ -403,19 +404,19 @@ class Folders(BaseService):
             return_val = self.getFolder(folder_response['result']['folder'])
         return return_val
 
-    def deleteObjectFolder(self, ref, folder="", **kwargs):
+    def delete_object_folder(self, ref, folder="", **kwargs):
         folder_ref = self.ref_or_raise(folder)
         url = ""
         if not folder_ref:
             url = "{0}/{1}/{2}".format(self.url_base, ref, self.url_base)
         else:
             url = "{0}/{1}/{2}".format(self.url_base, ref, folder_ref)
-        return self.client.deleteItem(url, **kwargs)
+        return self.client.delete_item(url, **kwargs)
 
-    def addToFolder(self, ref, folder, saveComment=""):
+    def add_to_folder(self, ref, folder, save_comment=""):
         folder_ref = self.ref_or_raise(folder)
         payload = {
-            "saveComment": saveComment
+            "saveComment": save_comment
         }
         return self.client.put("{0}{1}/{2}".format(self.client.baseurl,
                                                    ref,
@@ -423,7 +424,7 @@ class Folders(BaseService):
                                payload,
                                True)
 
-    def getAllObjects(self, folder):
+    def get_all_objects(self, folder):
         folder_ref = self.ref_or_raise(folder)
         object_json = self.client.get("{0}{1}/Objects".format(self.client.baseurl,
                                                               folder_ref))

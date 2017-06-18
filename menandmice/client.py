@@ -105,71 +105,71 @@ class Client(BaseObject):
         self.Devices = Devices(self)
         self.ChangeRequests = ChangeRequests(self)
 
-    def newDnsZone(self, **kwargs):
-        return DNSZone(**kwargs)
+    def new_dns_zone(self, *args, **kwargs):
+        return DNSZone(*args, **kwargs)
 
-    def newDnsRecord(self, **kwargs):
-        return DNSRecord(**kwargs)
+    def new_dns_record(self, *args, **kwargs):
+        return DNSRecord(*args, **kwargs)
 
-    def newDnsView(self, **kwargs):
-        return DNSView(**kwargs)
+    def new_dns_view(self, *args, **kwargs):
+        return DNSView(*args, **kwargs)
 
-    def newDnsGenerateDirective(self, **kwargs):
-        return DNSGenerateDirective(**kwargs)
+    def new_dns_generate_directive(self, *args, **kwargs):
+        return DNSGenerateDirective(*args, **kwargs)
 
-    def newDnsZoneOptions(self, **kwargs):
-        return DNSZoneOptions(**kwargs)
+    def new_dns_zone_options(self, *args, **kwargs):
+        return DNSZoneOptions(*args, **kwargs)
 
-    def newFolder(self, **kwargs):
-        return Folder(**kwargs)
+    def new_folder(self, *args, **kwargs):
+        return Folder(*args, **kwargs)
 
-    def newObjectAccess(self, **kwargs):
-        return ObjectAccess(**kwargs)
+    def new_object_access(self, *args, **kwargs):
+        return ObjectAccess(*args, **kwargs)
 
-    def newIdentityAccess(self, **kwargs):
-        return IdentityAccess(**kwargs)
+    def new_identity_access(self, *args, **kwargs):
+        return IdentityAccess(*args, **kwargs)
 
-    def newAccessEntry(self, **kwargs):
-        return AccessEntry(**kwargs)
+    def new_access_entry(self, *args, **kwargs):
+        return AccessEntry(*args, **kwargs)
 
-    def newEvent(self, **kwargs):
-        return Event(**kwargs)
+    def new_event(self, *args, **kwargs):
+        return Event(*args, **kwargs)
 
-    def newPropertyDefinition(self, **kwargs):
-        return PropertyDefinition(**kwargs)
+    def new_property_definition(self, *args, **kwargs):
+        return PropertyDefinition(*args, **kwargs)
 
-    def newRole(self, **kwargs):
-        return Role(**kwargs)
+    def new_role(self, *args, **kwargs):
+        return Role(*args, **kwargs)
 
-    def newGroup(self, **kwargs):
-        return Group(**kwargs)
+    def new_group(self, *args, **kwargs):
+        return Group(*args, **kwargs)
 
-    def newUser(self, **kwargs):
-        return User(**kwargs)
+    def new_user(self, *args, **kwargs):
+        return User(*args, **kwargs)
 
-    def newIpamRecord(self, **kwargs):
-        return IPAMRecord(**kwargs)
+    def new_ipam_record(self, *args, **kwargs):
+        return IPAMRecord(*args, **kwargs)
 
-    def newRange(self, **kwargs):
-        return Range(**kwargs)
+    def new_range(self, *args, **kwargs):
+        return Range(*args, **kwargs)
 
-    def newDiscovery(self, **kwargs):
-        return Discovery(**kwargs)
+    def new_discovery(self, *args, **kwargs):
+        return Discovery(*args, **kwargs)
 
-    def newAddressBlock(self, **kwargs):
-        return AddressBlock(**kwargs)
+    def new_address_block(self, *args, **kwargs):
+        return AddressBlock(*args, **kwargs)
 
-    def newRangeStatisticsResponse(self, **kwargs):
-        return GetRangeStatisticsResponse(**kwargs)
+    def new_range_statistics_response(self, *args, **kwargs):
+        return GetRangeStatisticsResponse(*args, **kwargs)
 
-    def newInterface(self, **kwargs):
-        return Interface(**kwargs)
+    def new_interface(self, *args, **kwargs):
+        return Interface(*args, **kwargs)
 
-    def newDevice(self, **kwargs):
-        return Device(**kwargs)
+    def new_device(self, *args, **kwargs):
+        return Device(*args, **kwargs)
 
-    def newChangeRequest(self, **kwargs):
-        return ChangeRequest(**kwargs)
+    def new_change_request(self, *args, **kwargs):
+        return ChangeRequest(*args, **kwargs)
 
     def sanitize_json(self, json_obj):
         for k, v in json_obj.items():
@@ -261,26 +261,26 @@ class Client(BaseObject):
                 response.raise_for_status()
         return return_status
 
-    def deleteItem(self, ref, **kwargs):
+    def delete_item(self, ref, **kwargs):
         print("Delete item  " + ref)
         query_string = self.make_query_str(**kwargs)
         response = self.delete("{0}{1}{2}".format(self.baseurl, ref, query_string))
         return response
 
-    def updateItem(self, ref, properties, objType, saveComment, deleteUnspecified):
+    def update_item(self, ref, properties, obj_type, save_comment, delete_unspecified):
         if not isinstance(properties, list):
             properties = [properties]
         payload = {
             "ref": ref,
-            "objType": objType,
-            "saveComment": saveComment,
-            "deleteUnspecified": deleteUnspecified,
+            "objType": obj_type,
+            "saveComment": save_comment,
+            "deleteUnspecified": delete_unspecified,
             "properties": properties
         }
         response = self.put("{0}{1}".format(self.baseurl, ref), payload)
         return response
 
-    def getItemAccess(self, ref, **kwargs):
+    def get_item_access(self, ref, **kwargs):
         query_string = self.make_query_str(**kwargs)
         access_response_json = self.get(
             "{0}{1}/Access{2}".format(self.baseurl, ref, query_string))
@@ -288,18 +288,18 @@ class Client(BaseObject):
         access_object = ObjectAccess(access_response_json['result']['objectAccess'])
         return access_object
 
-    def setItemAccess(self, ref, identity_access, object_type, saveComment):
+    def set_item_access(self, ref, identity_access, object_type, save_comment):
         if not isinstance(identity_access, list):
             identity_access = [identity_access]
         payload = {
             "objType": object_type,
-            "saveComment": saveComment,
+            "saveComment": save_comment,
             "identityAccess": identity_access
         }
         print(payload)
         return self.put("{0}{1}/Access".format(self.baseurl, ref), payload)
 
-    def getItemHistory(self, ref, **kwargs):
+    def get_item_history(self, ref, **kwargs):
         query_string = self.make_query_str(**kwargs)
         history_response_json = self.get(
             "{0}{1}/History{2}".format(self.baseurl, ref, query_string))
@@ -308,7 +308,7 @@ class Client(BaseObject):
             all_events.append(Event(event))
         return all_events
 
-    def getPropertyDefinitions(self, ref, property_name):
+    def get_property_definitions(self, ref, property_name):
         url = ""
         if property_name:
             url = "{0}{1}/PropertyDefinitions/{2}".format(
@@ -321,22 +321,22 @@ class Client(BaseObject):
             property_definitions.append(PropertyDefinition(definition))
         return property_definitions
 
-    def newCustomProperty(self, ref, property_definition, saveComment):
+    def add_property_definition(self, ref, property_definition, save_comment):
         url = "{0}{1}/PropertyDefinitions".format(self.baseurl, ref)
         payload = {
-            'saveComment': saveComment,
+            'saveComment': save_comment,
             'propertyDefinition': property_definition
         }
         return self.post(url, payload)
 
-    def updatePropertyDefinitions(self, ref,
-                                  property_name,
-                                  property_definition,
-                                  updateExisting,
-                                  saveComment):
+    def update_property_definition(self, ref,
+                                   property_name,
+                                   property_definition,
+                                   update_existing,
+                                   save_comment):
         payload = {
-            'updateExisting': updateExisting,
-            'saveComment': saveComment,
+            'updateExisting': update_existing,
+            'saveComment': save_comment,
             'propertyDefinition': property_definition
         }
         return self.put("{0}{1}/PropertyDefinitions/{2}".format(self.baseurl,
@@ -344,10 +344,10 @@ class Client(BaseObject):
                                                                 property_name),
                         payload)
 
-    def deletePropertyDefinition(self, ref, property_name, saveComment):
+    def delete_property_definition(self, ref, property_name, save_comment):
         query_string = ""
-        if saveComment:
-            query_string = "?{0}".format(saveComment)
+        if save_comment:
+            query_string = "?{0}".format(save_comment)
         return self.delete("{0}{1}/PropertyDefinitions/{2}{3}".format(self.baseurl,
                                                                       ref,
                                                                       property_name,

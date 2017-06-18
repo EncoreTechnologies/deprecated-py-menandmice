@@ -70,57 +70,67 @@ class BaseService(BaseObject):
 
     def delete(self, obj_or_ref, **kwargs):
         ref = self.ref_or_raise(obj_or_ref, self.ref_key)
-        return self.client.deleteItem(ref, **kwargs)
+        return self.client.delete_item(ref, **kwargs)
 
     def update(self,
                obj_or_ref,
                properties,
-               objType="",
-               saveComment="",
-               deleteUnspecified=False):
+               obj_type="",
+               save_comment="",
+               delete_unspecified=False):
         ref = self.ref_or_raise(obj_or_ref, self.ref_key)
-        return self.client.updateItem(ref,
-                                      properties,
-                                      objType,
-                                      saveComment,
-                                      deleteUnspecified)
+        return self.client.update_item(ref,
+                                       properties,
+                                       obj_type,
+                                       save_comment,
+                                       delete_unspecified)
 
-    def getAccess(self, obj_or_ref, **kwargs):
+    def get_access(self, obj_or_ref, **kwargs):
         ref = self.ref_or_raise(obj_or_ref, self.ref_key)
-        return self.client.getItemAccess(ref, **kwargs)
+        return self.client.get_item_access(ref, **kwargs)
 
-    def setAccess(self, obj_or_ref, identity_access, object_type="", saveComment=""):
+    def set_access(self,
+                   obj_or_ref,
+                   identity_access,
+                   obj_type="",
+                   save_comment=""):
         ref = self.ref_or_raise(obj_or_ref, self.ref_key)
-        return self.client.setItemAccess(ref, identity_access, object_type, saveComment)
+        # this code allows a user to call get_access() which returns an ObjectAccess
+        # object, and then pass it to this set_access() function.
+        # Note: 'identityAccess' is a member of ObjectAccess that we will use
+        #        for setting this object's access
+        if isinstance(identity_access, dict) and 'identityAccess' in identity_access:
+            identity_access = identity_access['identityAccess']
+        return self.client.set_item_access(ref, identity_access, obj_type, save_comment)
 
-    def getHistory(self, obj_or_ref, **kwargs):
+    def get_history(self, obj_or_ref, **kwargs):
         ref = self.ref_or_raise(obj_or_ref, self.ref_key)
-        return self.client.getItemHistory(ref, **kwargs)
+        return self.client.get_item_history(ref, **kwargs)
 
-    def getPropertyDefinition(self, obj_or_ref, property_name=""):
+    def get_property_definition(self, obj_or_ref, property_name=""):
         ref = self.ref_or_raise(obj_or_ref, self.ref_key)
-        return self.client.getPropertyDefinitions(ref, property_name)
+        return self.client.get_property_definitions(ref, property_name)
 
-    def addNewPropertyDefinition(self, obj_or_ref, property_definition, saveComment=""):
+    def add_property_definition(self, obj_or_ref, property_definition, save_comment=""):
         ref = self.ref_or_raise(obj_or_ref, self.ref_key)
-        return self.client.newCustomProperty(ref, property_definition, saveComment)
+        return self.client.add_property_definition(ref, property_definition, save_comment)
 
-    def updatePropertyDefinition(self,
-                                 obj_or_ref,
-                                 property_name,
-                                 property_definition,
-                                 updateExisting="",
-                                 saveComment=""):
+    def update_property_definition(self,
+                                   obj_or_ref,
+                                   property_name,
+                                   property_definition,
+                                   update_existing=None,  # boolean
+                                   save_comment=""):
         ref = self.ref_or_raise(obj_or_ref, self.ref_key)
-        return self.client.updatePropertyDefinitions(ref,
-                                                     property_name,
-                                                     property_definition,
-                                                     updateExisting,
-                                                     saveComment)
+        return self.client.update_property_definition(ref,
+                                                      property_name,
+                                                      property_definition,
+                                                      update_existing,
+                                                      save_comment)
 
-    def deletePropertyDefinition(self, obj_or_ref, property_name, saveComment=""):
+    def delete_property_definition(self, obj_or_ref, property_name, save_comment=""):
         ref = self.ref_or_raise(obj_or_ref, self.ref_key)
-        return self.client.deletePropertyDefinition(ref, property_name, saveComment)
+        return self.client.delete_property_definition(ref, property_name, save_comment)
 
     def ref_or_raise(self, dict_or_ref, key="ref"):
         # is the object a string (ref)

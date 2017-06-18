@@ -45,9 +45,9 @@ class Groups(BaseService):
                                      get_response_entity_key="group",
                                      get_response_all_key="groups")
 
-    def add(self, group_input, saveComment=""):
+    def add(self, group_input, save_comment=""):
         payload = {
-            "saveComment": saveComment,
+            "saveComment": save_comment,
             "group": group_input
         }
         group_json = self.client.post("{0}{1}".format(self.client.baseurl,
@@ -58,7 +58,7 @@ class Groups(BaseService):
             group_return.append(self.get(ref)[0])
         return group_return
 
-    def getGroupRoles(self, group, **kwargs):
+    def get_group_roles(self, group, **kwargs):
         group_ref = self.ref_or_raise(group)
         all_roles = []
         query_string = self.make_query_str(**kwargs)
@@ -69,21 +69,21 @@ class Groups(BaseService):
             all_roles.append(Roles(self.client).build(role))
         return all_roles
 
-    def deleteGroupRole(self, group, role, saveComment=""):
+    def delete_group_role(self, group, role, save_comment=""):
         group_ref = self.ref_or_raise(group)
         role_ref = self.ref_or_raise(role)
-        if saveComment:
-            saveComment = "?{0}".format(saveComment)
+        if save_comment:
+            save_comment = "?{0}".format(save_comment)
         return self.client.delete("{0}{1}/{2}{3}".format(self.client.baseurl,
                                                          group_ref,
                                                          role_ref,
-                                                         saveComment))
+                                                         save_comment))
 
-    def addGroupRole(self, group, role, saveComment=""):
+    def add_group_role(self, group, role, save_comment=""):
         group_ref = self.ref_or_raise(group)
         role_ref = self.ref_or_raise(role)
         payload = {
-            "saveComment": saveComment
+            "saveComment": save_comment
         }
         return self.client.put("{0}{1}/{2}".format(self.client.baseurl,
                                                    group_ref,
@@ -91,7 +91,7 @@ class Groups(BaseService):
                                payload,
                                True)
 
-    def getUserRoles(self, group, **kwargs):
+    def get_user_roles(self, group, **kwargs):
         group_ref = self.ref_or_raise(group)
         all_users = []
         query_string = self.make_query_str(**kwargs)
@@ -102,21 +102,21 @@ class Groups(BaseService):
             all_users.append(User(self.client).build(user))
         return all_users
 
-    def deleteUserRole(self, group, user, saveComment=""):
+    def delete_user_role(self, group, user, save_comment=""):
         group_ref = self.ref_or_raise(group)
         user_ref = self.ref_or_raise(user)
-        if saveComment:
-            saveComment = "?{0}".format(saveComment)
+        if save_comment:
+            save_comment = "?{0}".format(save_comment)
         return self.client.delete("{0}{1}/{2}{3}".format(self.client.baseurl,
                                                          group_ref,
                                                          user_ref,
-                                                         saveComment))
+                                                         save_comment))
 
-    def addUserRole(self, group, user, saveComment=""):
+    def add_user_role(self, group, user, save_comment=""):
         group_ref = self.ref_or_raise(group)
         user_ref = self.ref_or_raise(user)
         payload = {
-            "saveComment": saveComment
+            "saveComment": save_comment
         }
         return self.client.put("{0}{1}/{2}".format(self.client.baseurl,
                                                    group_ref,
@@ -133,9 +133,9 @@ class Roles(BaseService):
                                     get_response_entity_key="role",
                                     get_response_all_key="roles")
 
-    def add(self, role, saveComment=""):
+    def add(self, role, save_comment=""):
         payload = {
-            "saveComment": saveComment,
+            "saveComment": save_comment,
             "role": role
         }
         role_json = self.client.post("{0}{1}".format(self.client.baseurl,
@@ -146,7 +146,7 @@ class Roles(BaseService):
             role_return.append(self.get(ref)[0])
         return role_return
 
-    def getRoleGroups(self, role, **kwargs):
+    def get_role_groups(self, role, **kwargs):
         role_ref = self.ref_or_raise(role)
         all_groups = []
         query_string = self.make_query_str(**kwargs)
@@ -157,7 +157,7 @@ class Roles(BaseService):
             all_groups.append(Group(self.client).build(group))
         return all_groups
 
-    def getRoleUsers(self, role, **kwargs):
+    def get_role_users(self, role, **kwargs):
         role_ref = self.ref_or_raise(role)
         all_users = []
         query_string = self.make_query_str(**kwargs)
@@ -177,9 +177,9 @@ class Users(BaseService):
                                     get_response_entity_key="user",
                                     get_response_all_key="users")
 
-    def add(self, user, saveComment=""):
+    def add(self, user, save_comment=""):
         payload = {
-            "saveComment": saveComment,
+            "saveComment": save_comment,
             "user": user
         }
         user_json = self.client.post("{0}{1}".format(self.client.baseurl,
@@ -190,7 +190,7 @@ class Users(BaseService):
             user_return.append(self.get(ref)[0])
         return user_return
 
-    def getUsersGroups(self, user, **kwargs):
+    def get_users_groups(self, user, **kwargs):
         user_ref = self.ref_or_raise(user)
         all_groups = []
         query_string = self.make_query_str(**kwargs)
@@ -201,7 +201,7 @@ class Users(BaseService):
             all_groups.append(Groups(self.client).build(group))
         return all_groups
 
-    def getUserRoles(self, user, **kwargs):
+    def get_user_roles(self, user, **kwargs):
         user_ref = self.ref_or_raise(user)
         all_roles = []
         query_string = self.make_query_str(**kwargs)
@@ -212,21 +212,21 @@ class Users(BaseService):
             all_roles.append(Roles(self.client).build(role))
         return all_roles
 
-    def deleteUserRole(self, user, role, saveComment=""):
+    def delete_user_role(self, user, role, save_comment=""):
         user_ref = self.ref_or_raise(user)
         role_ref = self.ref_or_raise(role)
-        if saveComment:
-            saveComment = "?{0}".format(saveComment)
+        if save_comment:
+            save_comment = "?{0}".format(save_comment)
         return self.client.delete("{0}{1}/{2}{3}".format(self.client.baseurl,
                                                          user_ref,
                                                          role_ref,
-                                                         saveComment))
+                                                         save_comment))
 
-    def addUserRole(self, user, role, saveComment=""):
+    def add_user_role(self, user, role, save_comment=""):
         user_ref = self.ref_or_raise(user)
         role_ref = self.ref_or_raise(role)
         payload = {
-            "saveComment": saveComment
+            "saveComment": save_comment
         }
         return self.client.put("{0}{1}/{2}".format(self.client.baseurl,
                                                    user_ref,

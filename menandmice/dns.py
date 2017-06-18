@@ -145,10 +145,10 @@ class DNSZones(BaseService):
                                        get_response_entity_key="dnsZone",
                                        get_response_all_key="dnsZones")
 
-    def add(self, dns_zone, master_zones="", saveComment=""):
+    def add(self, dns_zone, master_zones="", save_comment=""):
         payload = {
             "masters": master_zones,
-            "saveComment": saveComment,
+            "saveComment": save_comment,
             "dnsZone": dns_zone
         }
         zone_json = self.client.post("{0}{1}".format(self.client.baseurl,
@@ -157,7 +157,7 @@ class DNSZones(BaseService):
         dns_zone_return = self.get(zone_json['result']['ref'])
         return dns_zone_return[0]
 
-    def getRecords(self, dns_zone, **kwargs):
+    def get_records(self, dns_zone, **kwargs):
         zone_ref = self.ref_or_raise(dns_zone)
         all_records = []
         query_string = self.make_query_str(**kwargs)
@@ -168,7 +168,7 @@ class DNSZones(BaseService):
             all_records.append(DNSRecord(record))
         return all_records
 
-    def getZoneFolder(self, dns_zone, **kwargs):
+    def get_zone_folder(self, dns_zone, **kwargs):
         zone_ref = self.ref_or_raise(dns_zone)
         query_string = self.make_query_str(**kwargs)
         folder_response = self.client.get("{0}{1}/Folders{2}".format(self.client.baseurl,
@@ -176,7 +176,7 @@ class DNSZones(BaseService):
                                                                      query_string))
         return Folders(self.client).get(folder_response['result']['folder'])
 
-    def deleteZoneFromFolder(self, dns_zone, folder="", **kwargs):
+    def delete_zone_from_folder(self, dns_zone, folder="", **kwargs):
         zone_ref = self.ref_or_raise(dns_zone)
         folder_ref = self.ref_or_raise(folder)
         query_string = self.make_query_str(**kwargs)
@@ -186,12 +186,12 @@ class DNSZones(BaseService):
             url = "{0}{1}/Folders{2}".format(self.client.baseurl, zone_ref, query_string)
         return self.client.delete(url)
 
-    def addZoneToFolder(self, dns_zone, folder, saveComment=""):
+    def add_zone_to_folder(self, dns_zone, folder, save_comment=""):
         zone_ref = self.ref_or_raise(dns_zone)
         folder_ref = self.ref_or_raise(folder)
-        return Folders(self.client).addToFolder(zone_ref, folder_ref, saveComment)
+        return Folders(self.client).add_to_folder(zone_ref, folder_ref, save_comment)
 
-    def getGenerateDirective(self, dns_zone="", directive=""):
+    def get_generate_directive(self, dns_zone="", directive=""):
         zone_ref = self.ref_or_raise(dns_zone)
         directive_ref = self.ref_or_raise(directive)
         all_directives = []
@@ -208,16 +208,16 @@ class DNSZones(BaseService):
                 DNSGenerateDirective(directive_response['result']['dnsGenerateDirective']))
         return all_directives
 
-    def deleteGenerateDirective(self, directive, **kwargs):
+    def delete_generate_directive(self, directive, **kwargs):
         directive_ref = self.ref_or_raise(directive)
-        return self.client.deleteItem("{0}/{1}".format(self.url_base, directive_ref),
+        return self.client.delete_item("{0}/{1}".format(self.url_base, directive_ref),
                                       **kwargs)
 
-    def addGenerateDirective(self, dns_zone, dnsGenerateDirective_input, saveComment=""):
+    def add_aenerate_directive(self, dns_zone, dns_generate_directive, save_comment=""):
         zone_ref = self.ref_or_raise(dns_zone)
         payload = {
-            "saveComment": saveComment,
-            "dnsGenerateDirective": dnsGenerateDirective_input
+            "saveComment": save_comment,
+            "dnsGenerateDirective": dns_generate_directive
         }
         directive_json = self.client.post("{0}{1}/GenerateDirectives".format(self.client.baseurl,
                                                                              zone_ref),
@@ -225,27 +225,27 @@ class DNSZones(BaseService):
         directive_return = self.getGenerateDirective(directive_json['result']['ref'])
         return directive_return[0]
 
-    def getKeyStorageProviders(self, dns_zone):
+    def get_ley_storage_providers(self, dns_zone):
         zone_ref = self.ref_or_raise(dns_zone)
         providers_response = self.client.get(
             "{0}{1}/KeyStorageProviders".format(self.client.baseurl, zone_ref))
         return providers_response['result']['keyStorageProviders']
 
-    def getZoneOptions(self, dns_zone):
+    def get_zone_options(self, dns_zone):
         zone_ref = self.ref_or_raise(dns_zone)
         options_response = self.client.get("{0}{1}/Options".format(self.client.baseurl, zone_ref))
         return options_response['result']['dnsZoneOptions']
 
-    def updateZoneOptions(self, dns_zone, dns_options_input, saveComment=""):
+    def update_zone_options(self, dns_zone, dns_options_input, save_comment=""):
         zone_ref = self.ref_or_raise(dns_zone)
         payload = {
-            "saveComment": saveComment,
+            "saveComment": save_comment,
             "dnsZoneOptions": dns_options_input
         }
         return self.client.put("{0}{1}/Options".format(self.client.baseurl, zone_ref),
                                payload)
 
-    def getZoneScopes(self, dns_zone, **kwargs):
+    def get_zone_scopes(self, dns_zone, **kwargs):
         zone_ref = self.ref_or_raise(dns_zone)
         query_string = self.make_query_str(**kwargs)
         dns_zone_response = self.client.get("{0}{1}/Scopes{2}".format(self.client.baseurl,
@@ -263,19 +263,20 @@ class DNSRecords(BaseService):
                                          get_response_all_key="dnsRecords",
                                          get_is_singular=True)
 
-    def add(self, dnsRecord_input,
-            saveComment="",
-            autoAssignRangeRef="",
-            dnsZoneRef="",
-            forceOverride=""):
-        if not isinstance(dnsRecord_input, list):
-            dnsRecord_input = [dnsRecord_input]
+    def add(self,
+            dns_record,
+            save_comment="",
+            auto_assign_range_ref="",
+            dns_zone_ref="",
+            force_override=""):
+        if not isinstance(dns_record, list):
+            dns_record = [dns_record]
         payload = {
-            "saveComment": saveComment,
-            "autoAssignRangeRef": autoAssignRangeRef,
-            "dnsZoneRef": dnsZoneRef,
-            "forceOverrideOfNamingConflictCheck": forceOverride,
-            "dnsRecords": dnsRecord_input
+            "saveComment": save_comment,
+            "autoAssignRangeRef": auto_assign_range_ref,
+            "dnsZoneRef": dns_zone_ref,
+            "forceOverrideOfNamingConflictCheck": force_override,
+            "dnsRecords": dns_record
         }
         response = self.client.post("{0}{1}".format(self.client.baseurl,
                                                     self.url_base),
@@ -293,7 +294,7 @@ class DNSRecords(BaseService):
             dns_record_return.append(self.get(ref)[0])
         return dns_record_return
 
-    def getRelatedRecords(self, dns_record):
+    def get_related_records(self, dns_record):
         record_ref = self.ref_or_raise(dns_record)
         all_records = []
         dns_record_response = self.client.get(
@@ -303,7 +304,7 @@ class DNSRecords(BaseService):
             all_records.append(DNSRecord(record))
         return all_records
 
-    def deleteRelatedRecords(self, dns_record, **kwargs):
+    def delete_related_records(self, dns_record, **kwargs):
         record_ref = self.ref_or_raise(dns_record)
         query_string = self.make_query_str(**kwargs)
         return self.client.delete(
@@ -320,7 +321,7 @@ class DNSViews(BaseService):
                                        get_response_entity_key="dnsView",
                                        get_response_all_key="dnsViews")
 
-    def getZones(self, dns_view):
+    def get_zones(self, dns_view):
         view_ref = self.ref_or_raise(dns_view)
         all_zones = []
         dns_zone_response = self.client.get("{0}{1}/DNSZones".format(self.client.baseurl,
