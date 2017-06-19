@@ -45,9 +45,46 @@ class BaseTest(unittest.TestCase):
         return MM_PASSWORD
 
     def setUp(self):
+        super(BaseTest, self).setUp()
         self.client = menandmice.client.Client(self.server,
                                                self.username,
                                                self.password)
 
     def tearDown(self):
+        super(BaseTest, self).tearDown()
         del self.client
+
+
+class BaseObjectTest(BaseTest):
+    __test__ = False
+
+    def setUp(self):
+        super(BaseObjectTest, self).setUp()
+        self.obj_class = None
+        self.obj_dict = {}
+
+    def tearDown(self):
+        super(BaseObjectTest, self).tearDown()
+        del self.obj_class
+        del self.obj_dict
+
+    def add_key(self, key, default=None):
+        self.obj_dict[key] = default
+
+    def test_init(self):
+        obj = self.obj_class()
+        self.assertIsInstance(obj, menandmice.base.BaseObject)
+        self.assertIsInstance(obj, dict)
+        self.assertEquals(sorted(obj.keys()), sorted(self.obj_dict.keys()))
+        for k, v in obj.items():
+            self.assertEquals(v, self.obj_dict[k], msg="key = {}".format(k))
+
+    def test_init_dict(self):
+        expected_dict = self.obj_dict
+        obj = self.obj_class(expected_dict)
+        self.assertEquals(obj, expected_dict)
+
+    def test_init_kwargs(self):
+        expected_dict = self.obj_dict
+        obj = self.obj_class(**expected_dict)
+        self.assertEquals(obj, expected_dict)

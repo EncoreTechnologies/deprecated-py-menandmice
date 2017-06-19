@@ -18,6 +18,11 @@
 import json
 import pprint
 
+# Python 2 and 3 compatible
+from future.standard_library import install_aliases
+install_aliases()
+from urllib.parse import urlencode
+
 
 class BaseObject(dict):
 
@@ -34,11 +39,7 @@ class BaseObject(dict):
     def make_query_str(self, **kwargs):
         query_string = ""
         if kwargs:
-            for key, value in kwargs.items():
-                if not query_string:
-                    query_string += "?{0}={1}".format(key, value)
-                else:
-                    query_string += "&{0}={1}".format(key, value)
+            query_string = "?{0}".format(urlencode(kwargs))
         return query_string
 
 

@@ -105,7 +105,7 @@ class PropertyDefinition(BaseObject):
 
 
 class Client(BaseObject):
-    def __init__(self, server, username, password):
+    def __init__(self, server, username, password, debug=False):
         self.baseurl = "http://{0}/mmws/api/".format(server)
         self.session = requests.Session()
         self.session.auth = (username, password)
@@ -121,6 +121,7 @@ class Client(BaseObject):
         self.Interfaces = Interfaces(self)
         self.Devices = Devices(self)
         self.ChangeRequests = ChangeRequests(self)
+        self.debug = debug  # @todo change this to use logging
 
     def new_dns_zone(self, *args, **kwargs):
         return DNSZone(*args, **kwargs)
@@ -210,10 +211,12 @@ class Client(BaseObject):
         return dirty_dict
 
     def get(self, url):
-        print("GET " + url)
+        if self.debug:
+            print("GET " + url)
         response = self.session.get(url)
         return_val = ""
-        print(response.status_code)
+        if self.debug:
+            print(response.status_code)
         if response.status_code == 200:
             return_val = response.json()
         elif response.status_code == 204:
@@ -230,12 +233,15 @@ class Client(BaseObject):
         return return_val
 
     def post(self, url, payload):
-        print("POST " + url)
+        if self.debug:
+            print("POST " + url)
         sanitized_payload = self.sanitize_dict(payload)
-        print(sanitized_payload)
-        print(json.dumps(sanitized_payload))
+        if self.debug:
+            print(sanitized_payload)
+            print(json.dumps(sanitized_payload))
         response = self.session.post(url, json=sanitized_payload)
-        print(response.status_code)
+        if self.debug:
+            print(response.status_code)
         if response.status_code != 201:
             error_json = response.json()
             if error_json:
@@ -248,10 +254,12 @@ class Client(BaseObject):
         return response.json()
 
     def delete(self, url):
-        print("DELETE " + url)
+        if self.debug:
+            print("DELETE " + url)
         response = self.session.delete(url)
         return_status = ""
-        print(response.status_code)
+        if self.debug:
+            print(response.status_code)
         if response.status_code == 204:
             return_status = "Successfully removed!"
         else:
@@ -266,13 +274,16 @@ class Client(BaseObject):
         return return_status
 
     def put(self, url, payload, sanitize_override=False):
-        print("PUT " + url)
+        if self.debug:
+            print("PUT " + url)
         if not sanitize_override:
             payload = self.sanitize_dict(payload)
-        print(payload)
+        if self.debug:
+            print(payload)
         response = self.session.put(url, json=payload)
         return_status = ""
-        print(response.status_code)
+        if self.debug:
+            print(response.status_code)
         if response.status_code == 204:
             return_status = "Successfully updated!"
         else:
@@ -287,8 +298,11 @@ class Client(BaseObject):
         return return_status
 
     def delete_item(self, ref, **kwargs):
-        print("Delete item  " + ref)
+        if self.debug:
+            print("Delete item  " + ref)
         query_string = self.make_query_str(**kwargs)
+        if self.debug:
+            print query_string
         response = self.delete("{0}{1}{2}".format(self.baseurl, ref, query_string))
         return response
 
@@ -309,7 +323,8 @@ class Client(BaseObject):
         query_string = self.make_query_str(**kwargs)
         access_response_json = self.get(
             "{0}{1}/Access{2}".format(self.baseurl, ref, query_string))
-        pprint.pprint(access_response_json['result'])
+        if self.debug:
+            pprint.pprint(access_response_json['result'])
         access_object = ObjectAccess(access_response_json['result']['objectAccess'])
         return access_object
 
@@ -321,7 +336,8 @@ class Client(BaseObject):
             "saveComment": save_comment,
             "identityAccess": identity_access
         }
-        print(payload)
+        if self.debug:
+            print(payload)
         return self.put("{0}{1}/Access".format(self.baseurl, ref), payload)
 
     def get_item_history(self, ref, **kwargs):
@@ -372,7 +388,7 @@ class Client(BaseObject):
     def delete_property_definition(self, ref, property_name, save_comment):
         query_string = ""
         if save_comment:
-            query_string = "?{0}".format(save_comment)
+            query_string = self.make_query_str(**{"saveComment": save_comment})
         return self.delete("{0}{1}/PropertyDefinitions/{2}{3}".format(self.baseurl,
                                                                       ref,
                                                                       property_name,

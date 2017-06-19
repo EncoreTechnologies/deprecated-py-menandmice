@@ -15,13 +15,77 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from base_test import BaseTest
+from base_test import BaseTest, BaseObjectTest
 from mock import patch
 
 import menandmice
 import requests
-# import pprint
 import json
+
+
+class TestAccessEntry(BaseObjectTest):
+    __test__ = True
+
+    def setUp(self):
+        super(TestAccessEntry, self).setUp()
+        self.obj_class = menandmice.client.AccessEntry
+        self.add_key('name')
+        self.add_key('access')
+
+
+class TestIdentityAccess(BaseObjectTest):
+    __test__ = True
+
+    def setUp(self):
+        super(TestIdentityAccess, self).setUp()
+        self.obj_class = menandmice.client.IdentityAccess
+        self.add_key('identityRef')
+        self.add_key('identityName')
+        self.add_key('accessEntries', [menandmice.client.AccessEntry()])
+
+
+class TestObjectAccess(BaseObjectTest):
+    __test__ = True
+
+    def setUp(self):
+        super(TestObjectAccess, self).setUp()
+        self.obj_class = menandmice.client.ObjectAccess
+        self.add_key('ref')
+        self.add_key('name')
+        self.add_key('identityAccess', [menandmice.client.IdentityAccess()])
+
+
+class TestEvent(BaseObjectTest):
+    __test__ = True
+
+    def setUp(self):
+        super(TestEvent, self).setUp()
+        self.obj_class = menandmice.client.Event
+        self.add_key('eventType')
+        self.add_key('objType')
+        self.add_key('objRef')
+        self.add_key('objName')
+        self.add_key('timestamp')
+        self.add_key('username')
+        self.add_key('saveComment')
+        self.add_key('eventText')
+
+
+class TestPropertyDefinition(BaseObjectTest):
+    __test__ = True
+
+    def setUp(self):
+        super(TestPropertyDefinition, self).setUp()
+        self.obj_class = menandmice.client.PropertyDefinition
+        self.add_key('name')
+        self.add_key('type')
+        self.add_key('system')
+        self.add_key('mandatory')
+        self.add_key('readOnly')
+        self.add_key('multiLine')
+        self.add_key('defaultValue')
+        self.add_key('listItems')
+        self.add_key('parentProperty')
 
 
 class TestClient(BaseTest):
@@ -56,6 +120,7 @@ class TestClient(BaseTest):
         self.assertEqual(self.client.Interfaces.client, self.client)
         self.assertEqual(self.client.Devices.client, self.client)
         self.assertEqual(self.client.ChangeRequests.client, self.client)
+        self.assertEqual(self.client.debug, False)
 
     def test_new_dns_zone(self):
         dns_zone = self.client.new_dns_zone({'ref': 'test/123'}, name='abc')
@@ -400,3 +465,344 @@ class TestClient(BaseTest):
             self.client.delete(url)
 
         session.delete.assert_called_with(url)
+
+    @patch('menandmice.client.requests.Session')
+    def test_put_204(self, session):
+        url = "http://test.server.local/mmws/api/fake"
+        payload = {"input": "abc"}
+        json_str = ('{ "junk": 123 }')
+        json_obj = json.loads(json_str)
+
+        session.put.return_value.status_code = 204
+        session.put.return_value.json.return_value = json_obj
+        self.client.session = session
+
+        response = self.client.put(url, payload)
+
+        session.put.assert_called_with(url, json=payload)
+        self.assertEqual(response, "Successfully updated!")
+
+    @patch('menandmice.client.requests.Session')
+    def test_put_sanitize(self, session):
+        url = "http://test.server.local/mmws/api/fake"
+        payload = {"input": "abc"}
+        json_str = ('{ "junk": 123, "empty_str": "", "empty_list": [], "empty_dict": {} }')
+        json_obj = json.loads(json_str)
+
+        session.put.return_value.status_code = 204
+        session.put.return_value.json.return_value = json_obj
+        self.client.session = session
+
+        response = self.client.put(url, payload, sanitize_override=True)
+
+        session.put.assert_called_with(url, json=payload)
+        self.assertEqual(response, "Successfully updated!")
+
+    @patch('menandmice.client.requests.Session')
+    def test_put_sanitize_override(self, session):
+        url = "http://test.server.local/mmws/api/fake"
+        payload = {"input": "abc"}
+        json_str = ('{ "junk": 123, "empty_str": "", "empty_list": [], "empty_dict": {} }')
+        json_obj = json.loads(json_str)
+
+        session.put.return_value.status_code = 204
+        session.put.return_value.json.return_value = json_obj
+        self.client.session = session
+
+        response = self.client.put(url, payload, sanitize_override=True)
+
+        session.put.assert_called_with(url, json=payload)
+        self.assertEqual(response, "Successfully updated!")
+
+    @patch('menandmice.client.requests.Session')
+    def test_put_error(self, session):
+        url = "http://test.server.local/mmws/api/fake"
+        payload = {"input": "abc"}
+        json_str = ('{"error": { "code": 123, "message": "this is a test"} }')
+        json_obj = json.loads(json_str)
+
+        session.put.return_value.status_code = 400
+        session.put.return_value.json.return_value = json_obj
+        self.client.session = session
+
+        with self.assertRaises(requests.exceptions.HTTPError) as context:
+            self.client.put(url, payload)
+
+        session.put.assert_called_with(url, json=payload)
+        self.assertEqual(str(context.exception), '123: this is a test')
+
+    @patch('menandmice.client.requests.Session')
+    def test_put_error_raise_for_status(self, session):
+        url = "http://test.server.local/mmws/api/fake"
+        payload = {"input": "abc"}
+        json_str = ('{ "junk": 123 }')
+        json_obj = json.loads(json_str)
+
+        session.put.return_value.status_code = 499
+        session.put.return_value.json.return_value = json_obj
+        session.put.return_value.raise_for_status.side_effect = StandardError()
+        self.client.session = session
+
+        with self.assertRaises(StandardError):
+            self.client.put(url, payload)
+
+        session.put.assert_called_with(url, json=payload)
+
+    @patch('menandmice.client.Client.make_query_str')
+    @patch('menandmice.client.Client.delete')
+    def test_delete_item(self, mock_delete, mock_make_query_str):
+        base_url = "http://{0}/mmws/api/".format(self.server)
+        json_str = ('{ "junk": 123 }')
+        json_obj = json.loads(json_str)
+        query_str = "&mock_query_str=xxx"
+        ref = "DNSZones/123"
+        kwargs = {"arg_str": "test",
+                  "arg_list": ["test"],
+                  "arg_dict": {"sub_key": 123}}
+
+        mock_delete.return_value = json_obj
+        mock_make_query_str.return_value = query_str
+
+        response = self.client.delete_item(ref, **kwargs)
+
+        expected_url = "{0}{1}{2}".format(base_url, ref, query_str)
+        mock_make_query_str.assert_called_with(**kwargs)
+        mock_delete.assert_called_with(expected_url)
+        self.assertEqual(response, json_obj)
+
+    @patch('menandmice.client.Client.put')
+    def test_update_item(self, mock_put):
+        base_url = "http://{0}/mmws/api/".format(self.server)
+        json_str = ('{ "junk": 123 }')
+        json_obj = json.loads(json_str)
+        ref = "DNSZones/123"
+        properties = "123"
+        obj_type = "TestType"
+        save_comment = "Encore's update"
+        delete_unspecified = False
+        expected_payload = {
+            "ref": ref,
+            "objType": obj_type,
+            "saveComment": save_comment,
+            "deleteUnspecified": delete_unspecified,
+            "properties": [properties]  # checks to ensure list is created
+        }
+
+        mock_put.return_value = json_obj
+
+        response = self.client.update_item(ref,
+                                           properties,
+                                           obj_type,
+                                           save_comment,
+                                           delete_unspecified)
+
+        expected_url = "{0}{1}".format(base_url, ref)
+        mock_put.assert_called_with(expected_url, expected_payload)
+        self.assertEqual(response, json_obj)
+
+    @patch('menandmice.client.Client.make_query_str')
+    @patch('menandmice.client.Client.get')
+    def test_get_item_access(self, mock_get, mock_make_query_str):
+        base_url = "http://{0}/mmws/api/".format(self.server)
+        json_str = ('{ "result": { "objectAccess": { "ref": "xxx", "name": "test" } } }')
+        json_obj = json.loads(json_str)
+        query_str = "&mock_query_str=xxx"
+        ref = "DNSZones/123"
+        kwargs = {"arg_str": "test",
+                  "arg_list": ["test"],
+                  "arg_dict": {"sub_key": 123}}
+
+        mock_get.return_value = json_obj
+        mock_make_query_str.return_value = query_str
+
+        response = self.client.get_item_access(ref, **kwargs)
+
+        expected_url = "{0}{1}/Access{2}".format(base_url, ref, query_str)
+        expected_resp = menandmice.client.ObjectAccess(json_obj['result']['objectAccess'])
+        mock_make_query_str.assert_called_with(**kwargs)
+        mock_get.assert_called_with(expected_url)
+        self.assertEqual(response, expected_resp)
+
+    @patch('menandmice.client.Client.put')
+    def test_set_item_access(self, mock_put):
+        base_url = "http://{0}/mmws/api/".format(self.server)
+        json_str = ('{ "junk": 123 }')
+        json_obj = json.loads(json_str)
+        ref = "DNSZones/123"
+        obj_type = "TestType"
+        save_comment = "Encore's update"
+        identity_access = "test123"
+        expected_payload = {
+            "objType": obj_type,
+            "saveComment": save_comment,
+            "identityAccess": [identity_access]  # checks to ensure list is created
+        }
+
+        mock_put.return_value = json_obj
+
+        response = self.client.set_item_access(ref,
+                                               identity_access,
+                                               obj_type,
+                                               save_comment)
+
+        expected_url = "{0}{1}/Access".format(base_url, ref)
+        mock_put.assert_called_with(expected_url, expected_payload)
+        self.assertEqual(response, json_obj)
+
+    @patch('menandmice.client.Client.make_query_str')
+    @patch('menandmice.client.Client.get')
+    def test_get_item_history(self, mock_get, mock_make_query_str):
+        base_url = "http://{0}/mmws/api/".format(self.server)
+        json_str = ('{ "result": { "events": [{ "ref": "xxx", "name": "test" },'
+                    ' { "ref": "abc", "name": 123 }] } }')
+        json_obj = json.loads(json_str)
+        query_str = "&mock_query_str=xxx"
+        ref = "DNSZones/123"
+        kwargs = {"arg_str": "test"}
+
+        mock_get.return_value = json_obj
+        mock_make_query_str.return_value = query_str
+
+        response = self.client.get_item_history(ref, **kwargs)
+
+        expected_url = "{0}{1}/History{2}".format(base_url, ref, query_str)
+        expected_resp = [menandmice.client.Event(e) for e in json_obj['result']['events']]
+        mock_make_query_str.assert_called_with(**kwargs)
+        mock_get.assert_called_with(expected_url)
+        self.assertEqual(response, expected_resp)
+
+    @patch('menandmice.client.Client.get')
+    def test_get_property_definitions(self, mock_get):
+        base_url = "http://{0}/mmws/api/".format(self.server)
+        json_str = ('{ "result": { "propertyDefinitions": [{ "ref": "xxx", "name": "test" },'
+                    ' { "ref": "abc", "name": 123 }] } }')
+        json_obj = json.loads(json_str)
+        ref = "DNSZones/123"
+        property_name = ""
+
+        mock_get.return_value = json_obj
+
+        response = self.client.get_property_definitions(ref, property_name)
+
+        expected_url = "{0}{1}/PropertyDefinitions".format(base_url, ref)
+        prop_defs = json_obj['result']['propertyDefinitions']
+        expected_resp = [menandmice.client.PropertyDefinition(e) for e in prop_defs]
+        mock_get.assert_called_with(expected_url)
+        self.assertEqual(response, expected_resp)
+
+    @patch('menandmice.client.Client.get')
+    def test_get_property_definitions_named(self, mock_get):
+        base_url = "http://{0}/mmws/api/".format(self.server)
+        json_str = ('{ "result": { "propertyDefinitions": [{ "ref": "xxx", "name": "test" },'
+                    ' { "ref": "abc", "name": 123 }] } }')
+        json_obj = json.loads(json_str)
+        ref = "DNSZones/123"
+        property_name = "prop_name"
+
+        mock_get.return_value = json_obj
+
+        response = self.client.get_property_definitions(ref, property_name)
+
+        expected_url = "{0}{1}/PropertyDefinitions/{2}".format(base_url, ref, property_name)
+        prop_defs = json_obj['result']['propertyDefinitions']
+        expected_resp = [menandmice.client.PropertyDefinition(e) for e in prop_defs]
+        mock_get.assert_called_with(expected_url)
+        self.assertEqual(response, expected_resp)
+
+    @patch('menandmice.client.Client.post')
+    def test_add_property_definition(self, mock_post):
+        base_url = "http://{0}/mmws/api/".format(self.server)
+        json_str = ('{ "result": 123 }')
+        json_obj = json.loads(json_str)
+        ref = "DNSZones/123"
+        property_definition = "prop_def"
+        save_comment = "Encore comment"
+        expected_payload = {
+            'saveComment': save_comment,
+            'propertyDefinition': property_definition
+        }
+
+        mock_post.return_value = json_obj
+
+        response = self.client.add_property_definition(ref,
+                                                       property_definition,
+                                                       save_comment)
+
+        expected_url = "{0}{1}/PropertyDefinitions".format(base_url, ref)
+        mock_post.assert_called_with(expected_url, expected_payload)
+        self.assertEqual(response, json_obj)
+
+    @patch('menandmice.client.Client.put')
+    def test_update_property_definition(self, mock_put):
+        base_url = "http://{0}/mmws/api/".format(self.server)
+        json_str = ('{ "result": 123 }')
+        json_obj = json.loads(json_str)
+
+        ref = "DNSZones/123"
+        property_name = "prop_name"
+        property_definition = "prop_def"
+        update_existing = True
+        save_comment = "Encore comment"
+        expected_payload = {
+            'updateExisting': update_existing,
+            'saveComment': save_comment,
+            'propertyDefinition': property_definition
+        }
+
+        mock_put.return_value = json_obj
+
+        response = self.client.update_property_definition(ref,
+                                                          property_name,
+                                                          property_definition,
+                                                          update_existing,
+                                                          save_comment)
+
+        expected_url = "{0}{1}/PropertyDefinitions/{2}".format(base_url,
+                                                               ref,
+                                                               property_name)
+        mock_put.assert_called_with(expected_url, expected_payload)
+        self.assertEqual(response, json_obj)
+
+    @patch('menandmice.client.Client.delete')
+    def test_delete_property_definition(self, mock_delete):
+        base_url = "http://{0}/mmws/api/".format(self.server)
+        json_str = ('{ "result": 123 }')
+        json_obj = json.loads(json_str)
+
+        ref = "DNSZones/123"
+        property_name = "prop_name"
+        save_comment = "Encore comment"
+        query_string = "?saveComment=Encore+comment"
+
+        mock_delete.return_value = json_obj
+
+        response = self.client.delete_property_definition(ref,
+                                                          property_name,
+                                                          save_comment)
+
+        expected_url = "{0}{1}/PropertyDefinitions/{2}{3}".format(base_url,
+                                                                  ref,
+                                                                  property_name,
+                                                                  query_string)
+        mock_delete.assert_called_with(expected_url)
+        self.assertEqual(response, json_obj)
+
+    @patch('menandmice.client.Client.delete')
+    def test_delete_property_definition_no_comment(self, mock_delete):
+        base_url = "http://{0}/mmws/api/".format(self.server)
+        json_str = ('{ "result": 123 }')
+        json_obj = json.loads(json_str)
+        ref = "DNSZones/123"
+        property_name = "prop_name"
+
+        mock_delete.return_value = json_obj
+
+        response = self.client.delete_property_definition(ref,
+                                                          property_name,
+                                                          "")
+
+        expected_url = "{0}{1}/PropertyDefinitions/{2}".format(base_url,
+                                                               ref,
+                                                               property_name)
+        mock_delete.assert_called_with(expected_url)
+        self.assertEqual(response, json_obj)
