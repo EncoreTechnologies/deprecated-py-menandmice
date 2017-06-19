@@ -1,3 +1,20 @@
+# Licensed to the Encore Technologies ("Encore") under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
 import requests
 import pprint
 import json
@@ -171,18 +188,26 @@ class Client(BaseObject):
     def new_change_request(self, *args, **kwargs):
         return ChangeRequest(*args, **kwargs)
 
-    def sanitize_json(self, json_obj):
-        for k, v in json_obj.items():
-            if v is None:
-                del json_obj[k]
-            elif not v:
-                del json_obj[k]
+    def sanitize_list(self, dirty_list):
+        for idx, value in enumerate(dirty_list):
+            if isinstance(value, list):
+                dirty_list[idx] = self.sanitize_list(value)
+            elif isinstance(value, dict):
+                dirty_list[idx] = self.sanitize_dict(value)
+
+        # remove all None and empty elements
+        dirty_list = [x for x in dirty_list if x]
+        return dirty_list
+
+    def sanitize_dict(self, dirty_dict):
+        for k, v in dirty_dict.items():
+            if not v:
+                del dirty_dict[k]
             elif isinstance(v, list):
-                for list_value in v:
-                    self.sanitize_json(list_value)
+                dirty_dict[k] = self.sanitize_list(v)
             elif isinstance(v, dict):
-                self.sanitize_json(v)
-        return json_obj
+                dirty_dict[k] = self.sanitize_dict(v)
+        return dirty_dict
 
     def get(self, url):
         print("GET " + url)
@@ -206,7 +231,7 @@ class Client(BaseObject):
 
     def post(self, url, payload):
         print("POST " + url)
-        sanitized_payload = self.sanitize_json(payload)
+        sanitized_payload = self.sanitize_dict(payload)
         print(sanitized_payload)
         print(json.dumps(sanitized_payload))
         response = self.session.post(url, json=sanitized_payload)
@@ -243,7 +268,7 @@ class Client(BaseObject):
     def put(self, url, payload, sanitize_override=False):
         print("PUT " + url)
         if not sanitize_override:
-            payload = self.sanitize_json(payload)
+            payload = self.sanitize_dict(payload)
         print(payload)
         response = self.session.put(url, json=payload)
         return_status = ""
