@@ -23,6 +23,7 @@ from pip.req import parse_requirements
 
 from menandmice import __version__
 
+
 def fetch_requirements(requirements_file_path):
     """
     Return a list of requirements and links by parsing the provided requirements file.

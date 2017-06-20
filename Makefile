@@ -2,6 +2,7 @@ THIS_FILE := $(lastword $(MAKEFILE_LIST))
 ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 CI_REPO_PATH ?= $(ROOT_DIR)/ci
 CI_REPO_BRANCH ?= master
+export PYMODULE_NAME := $(shell python setup.py --name)
 
 .PHONY: all
 all: .DEFAULT
