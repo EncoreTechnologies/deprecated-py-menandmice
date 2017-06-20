@@ -19,9 +19,21 @@ import os.path
 
 from setuptools import setup, find_packages
 
-from dist_utils import fetch_requirements
+from pip.req import parse_requirements
 
 from menandmice import __version__
+
+def fetch_requirements(requirements_file_path):
+    """
+    Return a list of requirements and links by parsing the provided requirements file.
+    """
+    links = []
+    reqs = []
+    for req in parse_requirements(requirements_file_path, session=False):
+        if req.link:
+            links.append(str(req.link))
+        reqs.append(str(req.req))
+    return (reqs, links)
 
 PACKAGE_NAME = 'menandmice'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -29,7 +41,7 @@ REQUIREMENTS_FILE = os.path.join(BASE_DIR, 'requirements.txt')
 
 install_reqs, dep_links = fetch_requirements(REQUIREMENTS_FILE)
 
-with open('README.rst') as f:
+with open('README.md') as f:
     readme = f.read()
 
 with open('LICENSE') as f:
