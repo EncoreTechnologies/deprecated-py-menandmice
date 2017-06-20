@@ -44,6 +44,10 @@ class BaseTest(unittest.TestCase):
     def password(self):
         return MM_PASSWORD
 
+    @property
+    def url_base(self):
+        return "http://{0}/mmws/api/".format(self.server)
+
     def setUp(self):
         super(BaseTest, self).setUp()
         self.client = menandmice.client.Client(self.server,

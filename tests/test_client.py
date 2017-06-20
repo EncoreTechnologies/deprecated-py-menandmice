@@ -91,8 +91,7 @@ class TestPropertyDefinition(BaseObjectTest):
 class TestClient(BaseTest):
 
     def test_init(self):
-        self.assertEqual(self.client.baseurl,
-                         "http://{0}/mmws/api/".format(self.server))
+        self.assertEqual(self.client.baseurl, self.url_base)
         self.assertIsInstance(self.client.session, requests.Session)
         self.assertEqual(self.client.session.auth, (self.username, self.password))
         self.assertIsInstance(self.client.DNSZones, menandmice.dns.DNSZones)
@@ -551,7 +550,7 @@ class TestClient(BaseTest):
     @patch('menandmice.client.Client.make_query_str')
     @patch('menandmice.client.Client.delete')
     def test_delete_item(self, mock_delete, mock_make_query_str):
-        base_url = "http://{0}/mmws/api/".format(self.server)
+        base_url = self.url_base
         json_str = ('{ "junk": 123 }')
         json_obj = json.loads(json_str)
         query_str = "&mock_query_str=xxx"
@@ -572,7 +571,7 @@ class TestClient(BaseTest):
 
     @patch('menandmice.client.Client.put')
     def test_update_item(self, mock_put):
-        base_url = "http://{0}/mmws/api/".format(self.server)
+        base_url = self.url_base
         json_str = ('{ "junk": 123 }')
         json_obj = json.loads(json_str)
         ref = "DNSZones/123"
@@ -603,7 +602,7 @@ class TestClient(BaseTest):
     @patch('menandmice.client.Client.make_query_str')
     @patch('menandmice.client.Client.get')
     def test_get_item_access(self, mock_get, mock_make_query_str):
-        base_url = "http://{0}/mmws/api/".format(self.server)
+        base_url = self.url_base
         json_str = ('{ "result": { "objectAccess": { "ref": "xxx", "name": "test" } } }')
         json_obj = json.loads(json_str)
         query_str = "&mock_query_str=xxx"
@@ -625,7 +624,7 @@ class TestClient(BaseTest):
 
     @patch('menandmice.client.Client.put')
     def test_set_item_access(self, mock_put):
-        base_url = "http://{0}/mmws/api/".format(self.server)
+        base_url = self.url_base
         json_str = ('{ "junk": 123 }')
         json_obj = json.loads(json_str)
         ref = "DNSZones/123"
@@ -652,7 +651,7 @@ class TestClient(BaseTest):
     @patch('menandmice.client.Client.make_query_str')
     @patch('menandmice.client.Client.get')
     def test_get_item_history(self, mock_get, mock_make_query_str):
-        base_url = "http://{0}/mmws/api/".format(self.server)
+        base_url = self.url_base
         json_str = ('{ "result": { "events": [{ "ref": "xxx", "name": "test" },'
                     ' { "ref": "abc", "name": 123 }] } }')
         json_obj = json.loads(json_str)
@@ -673,7 +672,7 @@ class TestClient(BaseTest):
 
     @patch('menandmice.client.Client.get')
     def test_get_property_definitions(self, mock_get):
-        base_url = "http://{0}/mmws/api/".format(self.server)
+        base_url = self.url_base
         json_str = ('{ "result": { "propertyDefinitions": [{ "ref": "xxx", "name": "test" },'
                     ' { "ref": "abc", "name": 123 }] } }')
         json_obj = json.loads(json_str)
@@ -692,7 +691,7 @@ class TestClient(BaseTest):
 
     @patch('menandmice.client.Client.get')
     def test_get_property_definitions_named(self, mock_get):
-        base_url = "http://{0}/mmws/api/".format(self.server)
+        base_url = self.url_base
         json_str = ('{ "result": { "propertyDefinitions": [{ "ref": "xxx", "name": "test" },'
                     ' { "ref": "abc", "name": 123 }] } }')
         json_obj = json.loads(json_str)
@@ -711,7 +710,7 @@ class TestClient(BaseTest):
 
     @patch('menandmice.client.Client.post')
     def test_add_property_definition(self, mock_post):
-        base_url = "http://{0}/mmws/api/".format(self.server)
+        base_url = self.url_base
         json_str = ('{ "result": 123 }')
         json_obj = json.loads(json_str)
         ref = "DNSZones/123"
@@ -734,7 +733,7 @@ class TestClient(BaseTest):
 
     @patch('menandmice.client.Client.put')
     def test_update_property_definition(self, mock_put):
-        base_url = "http://{0}/mmws/api/".format(self.server)
+        base_url = self.url_base
         json_str = ('{ "result": 123 }')
         json_obj = json.loads(json_str)
 
@@ -765,7 +764,7 @@ class TestClient(BaseTest):
 
     @patch('menandmice.client.Client.delete')
     def test_delete_property_definition(self, mock_delete):
-        base_url = "http://{0}/mmws/api/".format(self.server)
+        base_url = self.url_base
         json_str = ('{ "result": 123 }')
         json_obj = json.loads(json_str)
 
@@ -789,7 +788,7 @@ class TestClient(BaseTest):
 
     @patch('menandmice.client.Client.delete')
     def test_delete_property_definition_no_comment(self, mock_delete):
-        base_url = "http://{0}/mmws/api/".format(self.server)
+        base_url = self.url_base
         json_str = ('{ "result": 123 }')
         json_obj = json.loads(json_str)
         ref = "DNSZones/123"

@@ -16,7 +16,6 @@
 # under the License.
 
 import json
-import pprint
 
 # Python 2 and 3 compatible
 from future.standard_library import install_aliases
@@ -61,10 +60,10 @@ class BaseService(BaseObject):
         self.get_is_singular = get_is_singular
         self.ref_key = ref_key
 
-    def build(self, json_input):
-        if isinstance(json_input, basestring):
-            json_input = json.loads(json_input)
-        return self.entity_class(**json_input)
+    def build(self, json_or_dict):
+        if isinstance(json_or_dict, basestring):
+            json_or_dict = json.loads(json_or_dict)
+        return self.entity_class(**json_or_dict)
 
     def get(self, obj_or_ref="", **kwargs):
         ref = self.ref_or_raise(obj_or_ref, self.ref_key)
@@ -74,14 +73,12 @@ class BaseService(BaseObject):
             response = self.client.get("{0}{1}{2}".format(self.client.baseurl,
                                                           ref,
                                                           query_string))
-            pprint.pprint(response)
             entities.append(self.build(response['result'][self.get_response_entity_key]))
         else:
             response = self.client.get(
                 "{0}{1}{2}".format(self.client.baseurl,
                                    self.url_base,
                                    query_string))
-            pprint.pprint(response)
             for entity in response['result'][self.get_response_all_key]:
                 entities.append(self.build(entity))
         return entities
