@@ -58,6 +58,7 @@ setup(
     license=license,
     install_requires=install_reqs,
     dependency_links=dep_links,
-    test_suite=PACKAGE_NAME,
+    test_suite="nose.collector",
+    tests_require=["nose", "mock"],
     packages=find_packages(exclude=['tests'])
 )
