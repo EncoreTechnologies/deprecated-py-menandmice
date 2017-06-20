@@ -301,3 +301,378 @@ class TestBaseService(BaseTest):
                                                               expected_query_str))
         mock_build.assert_has_calls(expected_calls)
         self.assertEquals(result, [expected_entity])
+
+    @patch("menandmice.base.BaseService.ref_or_raise")
+    def test_delete(self, mock_ref_or_raise):
+        expected_ref_key = "ref_key"
+        expected_ref = "DNSZone/123"
+        expected_result = "expected return"
+        mock_ref_or_raise.return_value = expected_ref
+        mock_client = Mock()
+        mock_client.delete_item.return_value = expected_result
+
+        kwargs_dict = {"test": "value", "test2": "value2"}
+
+        obj = BaseService(client=mock_client,
+                          ref_key=expected_ref_key)
+        result = obj.delete(expected_ref, **kwargs_dict)
+
+        mock_ref_or_raise.assert_called_with(expected_ref, expected_ref_key)
+        mock_client.delete_item.assert_called_with(expected_ref, **kwargs_dict)
+        self.assertEquals(result, expected_result)
+
+    @patch("menandmice.base.BaseService.ref_or_raise")
+    def test_update(self, mock_ref_or_raise):
+        expected_ref_key = "ref_key"
+        expected_ref = "DNSZone/123"
+        expected_result = "expected return"
+        expected_properties = "test_properties"
+        expected_obj_type = ""
+        expected_save_comment = ""
+        expected_delete_unspecified = False
+        mock_ref_or_raise.return_value = expected_ref
+        mock_client = Mock()
+        mock_client.update_item.return_value = expected_result
+
+        obj = BaseService(client=mock_client,
+                          ref_key=expected_ref_key)
+        result = obj.update(expected_ref, expected_properties)
+
+        mock_ref_or_raise.assert_called_with(expected_ref, expected_ref_key)
+        mock_client.update_item.assert_called_with(expected_ref,
+                                                   expected_properties,
+                                                   expected_obj_type,
+                                                   expected_save_comment,
+                                                   expected_delete_unspecified)
+        self.assertEquals(result, expected_result)
+
+    @patch("menandmice.base.BaseService.ref_or_raise")
+    def test_update_params(self, mock_ref_or_raise):
+        expected_ref_key = "ref_key"
+        expected_ref = "DNSZone/123"
+        expected_result = "expected return"
+        expected_properties = "test_properties"
+        expected_obj_type = "test_obj_type"
+        expected_save_comment = "test_save_comment"
+        expected_delete_unspecified = True
+        mock_ref_or_raise.return_value = expected_ref
+        mock_client = Mock()
+        mock_client.update_item.return_value = expected_result
+
+        obj = BaseService(client=mock_client,
+                          ref_key=expected_ref_key)
+        result = obj.update(expected_ref,
+                            expected_properties,
+                            expected_obj_type,
+                            expected_save_comment,
+                            expected_delete_unspecified)
+
+        mock_ref_or_raise.assert_called_with(expected_ref, expected_ref_key)
+        mock_client.update_item.assert_called_with(expected_ref,
+                                                   expected_properties,
+                                                   expected_obj_type,
+                                                   expected_save_comment,
+                                                   expected_delete_unspecified)
+        self.assertEquals(result, expected_result)
+
+    @patch("menandmice.base.BaseService.ref_or_raise")
+    def test_get_access(self, mock_ref_or_raise):
+        expected_ref_key = "ref_key"
+        expected_ref = "DNSZone/123"
+        expected_result = "expected return"
+        mock_ref_or_raise.return_value = expected_ref
+        mock_client = Mock()
+        mock_client.get_item_access.return_value = expected_result
+
+        kwargs_dict = {"test": "value", "test2": "value2"}
+
+        obj = BaseService(client=mock_client,
+                          ref_key=expected_ref_key)
+        result = obj.get_access(expected_ref, **kwargs_dict)
+
+        mock_ref_or_raise.assert_called_with(expected_ref, expected_ref_key)
+        mock_client.get_item_access.assert_called_with(expected_ref, **kwargs_dict)
+        self.assertEquals(result, expected_result)
+
+    @patch("menandmice.base.BaseService.ref_or_raise")
+    def test_set_access(self, mock_ref_or_raise):
+        expected_ref_key = "ref_key"
+        expected_ref = "DNSZone/123"
+        expected_result = "expected return"
+        expected_identity_access = "test identity access"
+        expected_obj_type = ""
+        expected_save_comment = ""
+        mock_ref_or_raise.return_value = expected_ref
+        mock_client = Mock()
+        mock_client.set_item_access.return_value = expected_result
+
+        obj = BaseService(client=mock_client,
+                          ref_key=expected_ref_key)
+        result = obj.set_access(expected_ref, expected_identity_access)
+
+        mock_ref_or_raise.assert_called_with(expected_ref, expected_ref_key)
+        mock_client.set_item_access.assert_called_with(expected_ref,
+                                                       expected_identity_access,
+                                                       expected_obj_type,
+                                                       expected_save_comment)
+        self.assertEquals(result, expected_result)
+
+    @patch("menandmice.base.BaseService.ref_or_raise")
+    def test_set_access_dict_and_params(self, mock_ref_or_raise):
+        expected_ref_key = "ref_key"
+        expected_ref = "DNSZone/123"
+        expected_result = "expected return"
+        expected_identity_access = "test identity access"
+        expected_identity_access_dict = {"identityAccess": expected_identity_access}
+        expected_obj_type = "test obj type"
+        expected_save_comment = "test save comment"
+        mock_ref_or_raise.return_value = expected_ref
+        mock_client = Mock()
+        mock_client.set_item_access.return_value = expected_result
+
+        obj = BaseService(client=mock_client,
+                          ref_key=expected_ref_key)
+        result = obj.set_access(expected_ref,
+                                expected_identity_access_dict,
+                                expected_obj_type,
+                                expected_save_comment)
+
+        mock_ref_or_raise.assert_called_with(expected_ref, expected_ref_key)
+        mock_client.set_item_access.assert_called_with(expected_ref,
+                                                       expected_identity_access,
+                                                       expected_obj_type,
+                                                       expected_save_comment)
+        self.assertEquals(result, expected_result)
+
+    @patch("menandmice.base.BaseService.ref_or_raise")
+    def test_get_history(self, mock_ref_or_raise):
+        expected_ref_key = "ref_key"
+        expected_ref = "DNSZone/123"
+        expected_result = "expected return"
+        mock_ref_or_raise.return_value = expected_ref
+        mock_client = Mock()
+        mock_client.get_item_history.return_value = expected_result
+
+        kwargs_dict = {"test": "value", "test2": "value2"}
+
+        obj = BaseService(client=mock_client,
+                          ref_key=expected_ref_key)
+        result = obj.get_history(expected_ref, **kwargs_dict)
+
+        mock_ref_or_raise.assert_called_with(expected_ref, expected_ref_key)
+        mock_client.get_item_history.assert_called_with(expected_ref, **kwargs_dict)
+        self.assertEquals(result, expected_result)
+
+    @patch("menandmice.base.BaseService.ref_or_raise")
+    def test_get_property_definition(self, mock_ref_or_raise):
+        expected_ref_key = "ref_key"
+        expected_ref = "DNSZone/123"
+        expected_result = "expected return"
+        expected_property_name = ""
+        mock_ref_or_raise.return_value = expected_ref
+        mock_client = Mock()
+        mock_client.get_property_definitions.return_value = expected_result
+
+        obj = BaseService(client=mock_client,
+                          ref_key=expected_ref_key)
+        result = obj.get_property_definition(expected_ref)
+
+        mock_ref_or_raise.assert_called_with(expected_ref, expected_ref_key)
+        mock_client.get_property_definitions.assert_called_with(expected_ref,
+                                                                expected_property_name)
+        self.assertEquals(result, expected_result)
+
+    @patch("menandmice.base.BaseService.ref_or_raise")
+    def test_get_property_definition_params(self, mock_ref_or_raise):
+        expected_ref_key = "ref_key"
+        expected_ref = "DNSZone/123"
+        expected_result = "expected return"
+        expected_property_name = "test_name"
+        mock_ref_or_raise.return_value = expected_ref
+        mock_client = Mock()
+        mock_client.get_property_definitions.return_value = expected_result
+
+        obj = BaseService(client=mock_client,
+                          ref_key=expected_ref_key)
+        result = obj.get_property_definition(expected_ref,
+                                             expected_property_name)
+
+        mock_ref_or_raise.assert_called_with(expected_ref, expected_ref_key)
+        mock_client.get_property_definitions.assert_called_with(expected_ref,
+                                                                expected_property_name)
+        self.assertEquals(result, expected_result)
+
+    @patch("menandmice.base.BaseService.ref_or_raise")
+    def test_add_property_definition(self, mock_ref_or_raise):
+        expected_ref_key = "ref_key"
+        expected_ref = "DNSZone/123"
+        expected_result = "expected return"
+        expected_property_definition = "property def"
+        expected_save_comment = ""
+        mock_ref_or_raise.return_value = expected_ref
+        mock_client = Mock()
+        mock_client.add_property_definition.return_value = expected_result
+
+        obj = BaseService(client=mock_client,
+                          ref_key=expected_ref_key)
+        result = obj.add_property_definition(expected_ref,
+                                             expected_property_definition)
+
+        mock_ref_or_raise.assert_called_with(expected_ref, expected_ref_key)
+        mock_client.add_property_definition.assert_called_with(expected_ref,
+                                                               expected_property_definition,
+                                                               expected_save_comment)
+        self.assertEquals(result, expected_result)
+
+    @patch("menandmice.base.BaseService.ref_or_raise")
+    def test_add_property_definition_params(self, mock_ref_or_raise):
+        expected_ref_key = "ref_key"
+        expected_ref = "DNSZone/123"
+        expected_result = "expected return"
+        expected_property_definition = "property def"
+        expected_save_comment = "test save comment"
+        mock_ref_or_raise.return_value = expected_ref
+        mock_client = Mock()
+        mock_client.add_property_definition.return_value = expected_result
+
+        obj = BaseService(client=mock_client,
+                          ref_key=expected_ref_key)
+        result = obj.add_property_definition(expected_ref,
+                                             expected_property_definition,
+                                             expected_save_comment)
+
+        mock_ref_or_raise.assert_called_with(expected_ref, expected_ref_key)
+        mock_client.add_property_definition.assert_called_with(expected_ref,
+                                                               expected_property_definition,
+                                                               expected_save_comment)
+        self.assertEquals(result, expected_result)
+
+    @patch("menandmice.base.BaseService.ref_or_raise")
+    def test_update_property_definition(self, mock_ref_or_raise):
+        expected_ref_key = "ref_key"
+        expected_ref = "DNSZone/123"
+        expected_result = "expected return"
+        expected_property_name = "property name"
+        expected_property_definition = "property def"
+        expected_update_existing = None
+        expected_save_comment = ""
+        mock_ref_or_raise.return_value = expected_ref
+        mock_client = Mock()
+        mock_client.update_property_definition.return_value = expected_result
+
+        obj = BaseService(client=mock_client,
+                          ref_key=expected_ref_key)
+        result = obj.update_property_definition(expected_ref,
+                                                expected_property_name,
+                                                expected_property_definition)
+
+        mock_ref_or_raise.assert_called_with(expected_ref, expected_ref_key)
+        mock_client.update_property_definition.assert_called_with(expected_ref,
+                                                                  expected_property_name,
+                                                                  expected_property_definition,
+                                                                  expected_update_existing,
+                                                                  expected_save_comment)
+        self.assertEquals(result, expected_result)
+
+    @patch("menandmice.base.BaseService.ref_or_raise")
+    def test_update_property_definition_params(self, mock_ref_or_raise):
+        expected_ref_key = "ref_key"
+        expected_ref = "DNSZone/123"
+        expected_result = "expected return"
+        expected_property_name = "property name"
+        expected_property_definition = "property def"
+        expected_update_existing = True
+        expected_save_comment = "test comment"
+        mock_ref_or_raise.return_value = expected_ref
+        mock_client = Mock()
+        mock_client.update_property_definition.return_value = expected_result
+
+        obj = BaseService(client=mock_client,
+                          ref_key=expected_ref_key)
+        result = obj.update_property_definition(expected_ref,
+                                                expected_property_name,
+                                                expected_property_definition,
+                                                expected_update_existing,
+                                                expected_save_comment)
+
+        mock_ref_or_raise.assert_called_with(expected_ref, expected_ref_key)
+        mock_client.update_property_definition.assert_called_with(expected_ref,
+                                                                  expected_property_name,
+                                                                  expected_property_definition,
+                                                                  expected_update_existing,
+                                                                  expected_save_comment)
+        self.assertEquals(result, expected_result)
+
+    @patch("menandmice.base.BaseService.ref_or_raise")
+    def test_delete_property_definition(self, mock_ref_or_raise):
+        expected_ref_key = "ref_key"
+        expected_ref = "DNSZone/123"
+        expected_result = "expected return"
+        expected_property_name = "property name"
+        expected_save_comment = ""
+        mock_ref_or_raise.return_value = expected_ref
+        mock_client = Mock()
+        mock_client.delete_property_definition.return_value = expected_result
+
+        obj = BaseService(client=mock_client,
+                          ref_key=expected_ref_key)
+        result = obj.delete_property_definition(expected_ref,
+                                                expected_property_name)
+
+        mock_ref_or_raise.assert_called_with(expected_ref, expected_ref_key)
+        mock_client.delete_property_definition.assert_called_with(expected_ref,
+                                                                  expected_property_name,
+                                                                  expected_save_comment)
+        self.assertEquals(result, expected_result)
+
+    @patch("menandmice.base.BaseService.ref_or_raise")
+    def test_delete_property_definition_params(self, mock_ref_or_raise):
+        expected_ref_key = "ref_key"
+        expected_ref = "DNSZone/123"
+        expected_result = "expected return"
+        expected_property_name = "property name"
+        expected_save_comment = "test comment"
+        mock_ref_or_raise.return_value = expected_ref
+        mock_client = Mock()
+        mock_client.delete_property_definition.return_value = expected_result
+
+        obj = BaseService(client=mock_client,
+                          ref_key=expected_ref_key)
+        result = obj.delete_property_definition(expected_ref,
+                                                expected_property_name,
+                                                expected_save_comment)
+
+        mock_ref_or_raise.assert_called_with(expected_ref, expected_ref_key)
+        mock_client.delete_property_definition.assert_called_with(expected_ref,
+                                                                  expected_property_name,
+                                                                  expected_save_comment)
+        self.assertEquals(result, expected_result)
+
+    def test_ref_or_raise_str(self):
+        expected_ref_str = "DNSZone/123"
+        obj = BaseService()
+        result = obj.ref_or_raise(expected_ref_str)
+        self.assertEquals(result, expected_ref_str)
+
+    def test_ref_or_raise_dict(self):
+        expected_ref_str = "DNSZone/123"
+        expected_ref_dict = {"ref": expected_ref_str}
+        obj = BaseService()
+        result = obj.ref_or_raise(expected_ref_dict)
+        self.assertEquals(result, expected_ref_str)
+
+    def test_ref_or_raise_dict_alternate_key(self):
+        expected_ref_str = "DNSZone/123"
+        expected_ref_key = "differentRefKey"
+        expected_ref_dict = {expected_ref_key: expected_ref_str}
+        obj = BaseService()
+        result = obj.ref_or_raise(expected_ref_dict, key=expected_ref_key)
+        self.assertEquals(result, expected_ref_str)
+
+    def test_ref_or_raise_raise(self):
+        expected_ref_int = 123
+        obj = BaseService()
+        with self.assertRaises(TypeError) as context:
+            obj.ref_or_raise(expected_ref_int)
+
+        self.assertEqual(str(context.exception), "Input must be of type basestring or dict")

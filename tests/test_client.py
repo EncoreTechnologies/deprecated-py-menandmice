@@ -119,7 +119,7 @@ class TestClient(BaseTest):
         self.assertEqual(self.client.Interfaces.client, self.client)
         self.assertEqual(self.client.Devices.client, self.client)
         self.assertEqual(self.client.ChangeRequests.client, self.client)
-        self.assertEqual(self.client.debug, False)
+        self.assertIsNotNone(self.client.logger)
 
     def test_new_dns_zone(self):
         dns_zone = self.client.new_dns_zone({'ref': 'test/123'}, name='abc')
