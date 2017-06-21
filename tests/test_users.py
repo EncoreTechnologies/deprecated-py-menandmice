@@ -74,14 +74,15 @@ class TestGroup(BaseObjectTest):
         self.add_key('groupMembers', [])   # list of User()
         self.add_key('roles', [])   # list of Role()
 
+
 class TestGroups(BaseTest):
 
     def test_init(self):
         expected_client = "Test Client"
-        expected_url_base="Groups"
-        expected_entity_class=menandmice.client.Group
-        expected_get_response_entity_key="group"
-        expected_get_response_all_key="groups"
+        expected_url_base = "Groups"
+        expected_entity_class = menandmice.client.Group
+        expected_get_response_entity_key = "group"
+        expected_get_response_all_key = "groups"
         expected_get_is_singular = False
         expected_ref_key = "ref"
         obj = Groups(client=expected_client)
@@ -132,10 +133,9 @@ class TestGroups(BaseTest):
         expected_group = "test group"
         expected_roles = [{"ref": "ref1", "name": "name1"},
                           {"ref": "ref2", "name": "name2"},
-                          {"ref": "ref3", "name": "name3"},]
+                          {"ref": "ref3", "name": "name3"}, ]
         expected_results = [Role(role) for role in expected_roles]
         expected_base_url = self.url_base
-        expected_url_base = "Groups"
         expected_kwargs = {"test": "value", "int": 123}
         expected_group_ref = "Groups/123"
         expected_query_str = "?query=xyz"
@@ -146,7 +146,6 @@ class TestGroups(BaseTest):
         mock_client = Mock()
         mock_client.baseurl = expected_base_url
         mock_client.get.return_value = {'result': {'roles': expected_roles}}
-
 
         obj = Groups(client=mock_client)
         results = obj.get_group_roles(expected_group, **expected_kwargs)
@@ -168,7 +167,6 @@ class TestGroups(BaseTest):
 
         expected_results = "test"
         expected_base_url = self.url_base
-        expected_url_base = "Groups"
         expected_save_comment = "save_comment"
         expected_query_str = "?saveComment=test"
 
@@ -200,7 +198,6 @@ class TestGroups(BaseTest):
 
         expected_results = "test"
         expected_base_url = self.url_base
-        expected_url_base = "Groups"
         expected_save_comment = "save_comment"
         expected_payload = {"saveComment": expected_save_comment}
 
@@ -228,10 +225,9 @@ class TestGroups(BaseTest):
         expected_group = "test group"
         expected_users = [{"ref": "ref1", "name": "name1"},
                           {"ref": "ref2", "name": "name2"},
-                          {"ref": "ref3", "name": "name3"},]
+                          {"ref": "ref3", "name": "name3"}, ]
         expected_results = [User(user) for user in expected_users]
         expected_base_url = self.url_base
-        expected_url_base = "Groups"
         expected_kwargs = {"test": "value", "int": 123}
         expected_group_ref = "Groups/123"
         expected_query_str = "?query=xyz"
@@ -242,7 +238,6 @@ class TestGroups(BaseTest):
         mock_client = Mock()
         mock_client.baseurl = expected_base_url
         mock_client.get.return_value = {'result': {'users': expected_users}}
-
 
         obj = Groups(client=mock_client)
         results = obj.get_group_users(expected_group, **expected_kwargs)
@@ -264,7 +259,6 @@ class TestGroups(BaseTest):
 
         expected_results = "test"
         expected_base_url = self.url_base
-        expected_url_base = "Groups"
         expected_save_comment = "save_comment"
         expected_query_str = "?saveComment=test"
 
@@ -296,7 +290,6 @@ class TestGroups(BaseTest):
 
         expected_results = "test"
         expected_base_url = self.url_base
-        expected_url_base = "Groups"
         expected_save_comment = "save_comment"
         expected_payload = {"saveComment": expected_save_comment}
 
@@ -323,10 +316,10 @@ class TestRoles(BaseTest):
 
     def test_init(self):
         expected_client = "Test Client"
-        expected_url_base="Roles"
-        expected_entity_class=menandmice.client.Role
-        expected_get_response_entity_key="role"
-        expected_get_response_all_key="roles"
+        expected_url_base = "Roles"
+        expected_entity_class = menandmice.client.Role
+        expected_get_response_entity_key = "role"
+        expected_get_response_all_key = "roles"
         expected_get_is_singular = False
         expected_ref_key = "ref"
         obj = Roles(client=expected_client)
@@ -380,7 +373,6 @@ class TestRoles(BaseTest):
                           {"ref": "ref3", "name": "name3"}]
         expected_results = [User(user) for user in expected_users]
         expected_base_url = self.url_base
-        expected_url_base = "Roles"
         expected_kwargs = {"test": "value", "int": 123}
         expected_role_ref = "Roles/123"
         expected_query_str = "?query=xyz"
@@ -391,7 +383,6 @@ class TestRoles(BaseTest):
         mock_client = Mock()
         mock_client.baseurl = expected_base_url
         mock_client.get.return_value = {'result': {'users': expected_users}}
-
 
         obj = Roles(client=mock_client)
         results = obj.get_role_users(expected_role, **expected_kwargs)
@@ -411,7 +402,6 @@ class TestRoles(BaseTest):
                            {"ref": "ref3", "name": "name3"}]
         expected_results = [Group(group) for group in expected_groups]
         expected_base_url = self.url_base
-        expected_url_base = "Roles"
         expected_kwargs = {"test": "value", "int": 123}
         expected_role_ref = "Roles/123"
         expected_query_str = "?query=xyz"
@@ -422,7 +412,6 @@ class TestRoles(BaseTest):
         mock_client = Mock()
         mock_client.baseurl = expected_base_url
         mock_client.get.return_value = {'result': {'groups': expected_groups}}
-
 
         obj = Roles(client=mock_client)
         results = obj.get_role_groups(expected_role, **expected_kwargs)
@@ -438,10 +427,10 @@ class TestUsers(BaseTest):
 
     def test_init(self):
         expected_client = "Test Client"
-        expected_url_base="Users"
-        expected_entity_class=menandmice.client.User
-        expected_get_response_entity_key="user"
-        expected_get_response_all_key="users"
+        expected_url_base = "Users"
+        expected_entity_class = menandmice.client.User
+        expected_get_response_entity_key = "user"
+        expected_get_response_all_key = "users"
         expected_get_is_singular = False
         expected_ref_key = "ref"
         obj = Users(client=expected_client)
@@ -495,7 +484,6 @@ class TestUsers(BaseTest):
                            {"ref": "ref3", "name": "name3"}]
         expected_results = [Group(group) for group in expected_groups]
         expected_base_url = self.url_base
-        expected_url_base = "Users"
         expected_kwargs = {"test": "value", "int": 123}
         expected_user_ref = "Users/123"
         expected_query_str = "?query=xyz"
@@ -507,7 +495,6 @@ class TestUsers(BaseTest):
         mock_client.baseurl = expected_base_url
         mock_client.get.return_value = {'result': {'groups': expected_groups}}
 
-
         obj = Users(client=mock_client)
         results = obj.get_user_groups(expected_user, **expected_kwargs)
 
@@ -517,17 +504,15 @@ class TestUsers(BaseTest):
         mock_make_query_str.assert_called_with(**expected_kwargs)
         self.assertEquals(results, expected_results)
 
-
     @patch("menandmice.users.Users.make_query_str")
     @patch("menandmice.users.Users.ref_or_raise")
     def test_get_user_roles(self, mock_ref_or_raise, mock_make_query_str):
         expected_user = "test user"
         expected_roles = [{"ref": "ref1", "name": "name1"},
-                           {"ref": "ref2", "name": "name2"},
-                           {"ref": "ref3", "name": "name3"}]
+                          {"ref": "ref2", "name": "name2"},
+                          {"ref": "ref3", "name": "name3"}]
         expected_results = [Role(role) for role in expected_roles]
         expected_base_url = self.url_base
-        expected_url_base = "Users"
         expected_kwargs = {"test": "value", "int": 123}
         expected_user_ref = "Users/123"
         expected_query_str = "?query=xyz"
@@ -539,17 +524,15 @@ class TestUsers(BaseTest):
         mock_client.baseurl = expected_base_url
         mock_client.get.return_value = {'result': {'roles': expected_roles}}
 
-
         obj = Users(client=mock_client)
         results = obj.get_user_roles(expected_user, **expected_kwargs)
 
         mock_client.get.assert_called_with("{0}{1}/Roles{2}".format(expected_base_url,
-                                                                     expected_user_ref,
-                                                                     expected_query_str))
+                                                                    expected_user_ref,
+                                                                    expected_query_str))
         mock_make_query_str.assert_called_with(**expected_kwargs)
         self.assertEquals(results, expected_results)
 
-
     @patch("menandmice.users.Users.make_query_str")
     @patch("menandmice.users.Users.ref_or_raise")
     def test_delete_user_role(self, mock_ref_or_raise, mock_make_query_str):
@@ -561,40 +544,6 @@ class TestUsers(BaseTest):
 
         expected_results = "test"
         expected_base_url = self.url_base
-        expected_url_base = "Roles"
-        expected_save_comment = "save_comment"
-        expected_query_str = "?saveComment=test"
-
-        mock_ref_or_raise.side_effect = [expected_user_ref, expected_role_ref]
-        mock_make_query_str.return_value = expected_query_str
-
-        mock_client = Mock()
-        mock_client.baseurl = expected_base_url
-        mock_client.delete.return_value = expected_results
-
-        obj = Users(client=mock_client)
-        results = obj.delete_user_role(expected_user,
-                                        expected_role,
-                                        expected_save_comment)
-
-        mock_client.delete.assert_called_with("{0}{1}/{2}{3}".format(expected_base_url,
-                                                                     expected_user_ref,
-                                                                     expected_role_ref,
-                                                                     expected_query_str))
-        self.assertEquals(results, expected_results)
-
-    @patch("menandmice.users.Users.make_query_str")
-    @patch("menandmice.users.Users.ref_or_raise")
-    def test_delete_user_role(self, mock_ref_or_raise, mock_make_query_str):
-        expected_user = "test user"
-        expected_role = "test role"
-
-        expected_user_ref = "Users/123"
-        expected_role_ref = "Roles/123"
-
-        expected_results = "test"
-        expected_base_url = self.url_base
-        expected_url_base = "Users"
         expected_save_comment = "save_comment"
         expected_query_str = "?saveComment=test"
 
@@ -626,7 +575,6 @@ class TestUsers(BaseTest):
 
         expected_results = "test"
         expected_base_url = self.url_base
-        expected_url_base = "Users"
         expected_save_comment = "save_comment"
         expected_payload = {"saveComment": expected_save_comment}
 
@@ -638,8 +586,8 @@ class TestUsers(BaseTest):
 
         obj = Users(client=mock_client)
         results = obj.add_user_role(expected_user,
-                                     expected_role,
-                                     expected_save_comment)
+                                    expected_role,
+                                    expected_save_comment)
 
         mock_client.put.assert_called_with("{0}{1}/{2}".format(expected_base_url,
                                                                expected_user_ref,
